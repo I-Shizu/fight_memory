@@ -48,8 +48,8 @@ dependencies:
   sqflite: ^2.0.0+4
   path_provider: ^2.0.11
   freezed_annotation:
-  flutter_riverpod:
   flutter_hooks:
+  riverpod_generator:
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +62,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   custom_lint: ^0.7.0
+  flutter_riverpod:
   build_runner:
   freezed:
 
