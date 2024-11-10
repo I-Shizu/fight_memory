@@ -1,15 +1,18 @@
-class UpdatePost {
-  final String? text;
-  final String? imageUrl;
-  final DateTime? date;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const UpdatePost({
-    this.text,
-    this.imageUrl,
-    this.date,
-  });
+part 'update_post_model.freezed.dart';
+part 'update_post_model.g.dart';
+
+@freezed
+class UpdatePost with _$UpdatePost {
+  const factory UpdatePost({
+    String? text,
+    String? imageUrl,
+    DateTime? date,
+  }) = _UpdatePost;
 
   // SQLite用のデータ形式
+  //部分更新可能
   Map<String, dynamic> toSQLite() {
     return {
       if (text != null) 'text': text,
