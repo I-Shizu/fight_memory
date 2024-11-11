@@ -1,31 +1,27 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fight_app2/Ui/Pages/top_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'login_page.dart';
-
-class ListPage extends StatefulWidget {
+class ListPage extends ConsumerWidget {
   const ListPage({super.key});
 
   @override
-  State<ListPage> createState() => _ListPageState();
-}
-
-class _ListPageState extends State<ListPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('リストページ'),
       ),
-      body: ElevatedButton(
-        onPressed: () async {
-          await FirebaseAuth.instance.signOut();
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-            (route) => false,
-          );
-        }, 
-        child: const Text('ログアウト'),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // ボタンを押すとログインページに遷移
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => TopPage()),
+              (route) => false,
+            );
+          },
+          child: const Text('ログアウト'),
+        ),
       ),
     );
   }

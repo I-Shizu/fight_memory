@@ -1,8 +1,4 @@
 import 'dart:io';
-
-import 'package:fight_app2/Controller/auth_controller.dart';
-import 'package:fight_app2/Controller/post_controller.dart';
-import 'package:fight_app2/Controller/storage_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -19,9 +15,6 @@ class NewPostPage extends StatefulWidget {
 
 class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClientMixin {
 
-  final PostController _postController = PostController();
-  final AuthController _authController = AuthController();
-  final StorageController _storageController = StorageController();
   final TextEditingController _postTextController = TextEditingController(text: '');
 
   File? _imageFile;
@@ -34,10 +27,9 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
   bool get wantKeepAlive => true;
 
   Future<void> _pickImage() async {
-    await _authController.checkAndLogin();
-
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
       setState(() {
