@@ -138,9 +138,9 @@ class _NewPostPageState extends ConsumerState<NewPostPage> with AutomaticKeepAli
                     ),
                   );
                 } else {
+                  // textとimageFileをViewModelに渡してaddPostを呼び出す
                   await ref.read(postProvider.notifier).addPost(
                         _postTextController.text,
-                        _imageFile!,
                       );
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => TopPage()),

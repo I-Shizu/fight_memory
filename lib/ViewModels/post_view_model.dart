@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Models/create_post_model.dart';
 import '../Models/post_model.dart';
@@ -30,9 +32,14 @@ class PostNotifier extends StateNotifier<List<Post>> {
   }
 
   // 投稿を追加
-  Future<void> addPost(CreatePost newPost) async {
+  Future<void> addPost(String text, File imageFile) async {
+    final newPost = CreatePost(
+      text: text,
+      date: DateTime.now(),
+      imageUrl: imageFile.path,
+    );
     await _repository.addPost(newPost);
-    fetchPosts(); // リストを再取得
+    fetchPosts(); // 投稿を追加した後、リストを再取得して更新
   }
 
   // 投稿を更新
