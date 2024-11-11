@@ -23,6 +23,12 @@ class PostNotifier extends StateNotifier<List<Post>> {
     state = posts;
   }
 
+   // 選択された日付に基づいて投稿を取得
+  Future<void> fetchPostsForDay(DateTime selectedDay) async {
+    final posts = await _repository.getPostsForDay(selectedDay);
+    state = posts;
+  }
+
   // 投稿を追加
   Future<void> addPost(CreatePost newPost) async {
     await _repository.addPost(newPost);

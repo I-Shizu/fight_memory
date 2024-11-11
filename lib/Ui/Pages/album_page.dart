@@ -1,5 +1,5 @@
-import 'package:fight_app2/Controller/post_controller.dart';
 import 'package:fight_app2/Model/post.dart';
+import 'package:fight_app2/ViewModels/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +11,7 @@ class AlbumPage extends StatefulWidget {
 }
 
 class _AlbumPageState extends State<AlbumPage> with AutomaticKeepAliveClientMixin {
-  final PostController _postController = PostController();
+  final PostNotifier = 
 
   @override
   bool get wantKeepAlive => true;
