@@ -1,25 +1,23 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../viewmodels/post_view_model.dart';
 import 'top_page.dart';
 
-
-class NewPostPage extends StatefulWidget {
-  const NewPostPage({super.key,});
+class NewPostPage extends ConsumerStatefulWidget {
+  const NewPostPage({super.key});
 
   @override
-  State<NewPostPage> createState() => _NewPostPageState();
+  ConsumerState<NewPostPage> createState() => _NewPostPageState();
 }
 
-class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClientMixin {
-
+class _NewPostPageState extends ConsumerState<NewPostPage> with AutomaticKeepAliveClientMixin {
   final TextEditingController _postTextController = TextEditingController(text: '');
-
   File? _imageFile;
   String? _postImageUrl;
-  
   final formatter = DateFormat('yyyy-MM-dd');
   final _postTime = DateTime.now();
 
@@ -29,22 +27,12 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    
-    if (pickedFile != null) {
-      final imageFile = File(pickedFile.path);
-      setState(() {
-        _imageFile = imageFile;
-        _postImageUrl = imageFile.path;
-      });
 
-      String? userId = _authController.getCurrentUserId();
-      if(userId != null) {
-        _storageController.uploadUserImage(userId, _imageFile!).then((imageUrl) {
-          setState(() {
-            _postImageUrl = imageUrl;
-          });
-        });
-      }
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+        _postImageUrl = _imageFile!.path;
+      });
     }
   }
 
@@ -59,7 +47,7 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(//今日の日付
+            Text(
               formatter.format(_postTime),
               textAlign: TextAlign.center,
               style: const TextStyle(
@@ -81,10 +69,8 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
                       await _pickImage();
                     },
                     child: _postImageUrl != null
-                      ? (_postImageUrl!.startsWith('http')
-                          ? Image.network(_postImageUrl!)
-                          : Image.file(File(_postImageUrl!)))
-                      : const Center(child: Icon(Icons.image, size: 50, color: Colors.grey)),
+                        ? Image.file(File(_postImageUrl!))
+                        : const Center(child: Icon(Icons.image, size: 50, color: Colors.grey)),
                   ),
                 ),
                 Container(
@@ -97,7 +83,7 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
                   child: GestureDetector(
                     onTap: () {
                       showDialog(
-                        context: context, 
+                        context: context,
                         builder: (context) {
                           return AlertDialog(
                             title: const Text('がんばったこと'),
@@ -113,7 +99,7 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
                                 onPressed: () {
                                   setState(() {});
                                   Navigator.of(context).pop();
-                                }, 
+                                },
                                 child: const Text('おけ'),
                               ),
                             ],
@@ -135,7 +121,7 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
               ],
             ),
             const SizedBox(height: 20),
-            ElevatedButton(//保存ボタン
+            ElevatedButton(
               onPressed: () async {
                 if (_postTextController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -144,7 +130,7 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
                       duration: Duration(seconds: 2),
                     ),
                   );
-                } else if (_postImageUrl == null) {
+                } else if (_imageFile == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('エラー：画像を選択してください'),
@@ -152,7 +138,10 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
                     ),
                   );
                 } else {
-                  await _postController.createPost(_postTextController.text, File(_postImageUrl!));
+                  await ref.read(postProvider.notifier).addPost(
+                        _postTextController.text,
+                        _imageFile!,
+                      );
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (context) => TopPage()),
                   );
@@ -167,49 +156,5 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
         ),
       ),
     );
-  }
-
-  Widget showImage() {
-    if(_postImageUrl != null){
-      return Container(
-        margin: const EdgeInsets.all(5),
-        child: Image.network(_postImageUrl!),
-      );
-    } else {
-      return Container(
-        margin: const EdgeInsets.all(5),
-        child: const Center(
-          child: Text(
-            'あっぷろーど',
-            style: TextStyle(
-              fontSize: 25,
-            ),
-          )
-        ),
-      );
-    }
-  }
-
-  Widget showText() {
-    if(_postTextController.text.isNotEmpty){
-      return Container(//入力されたテキストを表示
-        margin: const EdgeInsets.all(10),
-        child: Text(
-          _postTextController.text,
-          style: const TextStyle(
-            fontSize: 25,
-          ),
-        ),
-      );
-    } else {
-      return const Center(
-        child: Text(
-          'てきすと',
-          style: TextStyle(
-            fontSize: 25,
-          ),
-        ),
-      );
-    }
   }
 }
