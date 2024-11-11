@@ -1,5 +1,7 @@
-import 'database_helper.dart';
-import 'post_model.dart';
+import '../Models/create_post_model.dart';
+import '../Models/post_model.dart';
+import '../Models/update_post_model.dart';
+import '../database_helper.dart';
 
 class PostRepository {
   final dbHelper = DatabaseHelper.instance;

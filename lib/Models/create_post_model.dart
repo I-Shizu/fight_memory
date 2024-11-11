@@ -4,6 +4,7 @@ part 'create_post_model.freezed.dart';
 part 'create_post_model.g.dart';
 
 @freezed
+@JsonSerializable()
 class CreatePost with _$CreatePost {
   const factory CreatePost({
     required String text,
@@ -22,4 +23,6 @@ class CreatePost with _$CreatePost {
       'updatedAt': DateTime.now().toIso8601String(),
     };
   }
+
+  factory CreatePost.fromJson(Map<String, dynamic> json) => _$CreatePostFromJson(json);
 }

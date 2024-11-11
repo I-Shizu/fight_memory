@@ -4,6 +4,7 @@ part 'update_post_model.freezed.dart';
 part 'update_post_model.g.dart';
 
 @freezed
+@JsonSerializable()
 class UpdatePost with _$UpdatePost {
   const factory UpdatePost({
     String? text,
@@ -21,4 +22,6 @@ class UpdatePost with _$UpdatePost {
       'updatedAt': DateTime.now().toIso8601String(),
     };
   }
+
+  factory UpdatePost.fromJson(Map<String, dynamic> json) => _$UpdatePostFromJson(json);
 }

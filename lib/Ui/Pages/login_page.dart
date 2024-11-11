@@ -26,15 +26,6 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            //グーグルログイン機能使えないのでとりあえずコメントアウト
-            /*Center(
-              child: ElevatedButton(
-                onPressed: () async{
-                  LoginController().signInWithGoogle(context);
-                }, 
-                child: const Text('Sign In with Google'),
-              ),
-            ),*/
             const Text(
               'まだアカウントをお持ちでない方はこちら',
               style: TextStyle(

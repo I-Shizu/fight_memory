@@ -4,6 +4,7 @@ part 'post_model.freezed.dart';
 part 'post_model.g.dart';
 
 @freezed
+@JsonSerializable()
 class Post with _$Post {
   const factory Post({
     int? localId, // 自動インクリメントのIDとして使う
@@ -31,4 +32,6 @@ class Post with _$Post {
       'imageUrl': imageUrl,
     };
   }
+
+  factory Post.fromJson(Map<String, dynamic> json) => _$PostFromJson(json);
 }

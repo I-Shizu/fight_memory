@@ -14,11 +14,18 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+UpdatePost _$UpdatePostFromJson(Map<String, dynamic> json) {
+  return _UpdatePost.fromJson(json);
+}
+
 /// @nodoc
 mixin _$UpdatePost {
   String? get text => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
   DateTime? get date => throw _privateConstructorUsedError;
+
+  /// Serializes this UpdatePost to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of UpdatePost
   /// with the given fields replaced by the non-null parameter values.
@@ -118,9 +125,12 @@ class __$$UpdatePostImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$UpdatePostImpl implements _UpdatePost {
   const _$UpdatePostImpl({this.text, this.imageUrl, this.date});
+
+  factory _$UpdatePostImpl.fromJson(Map<String, dynamic> json) =>
+      _$$UpdatePostImplFromJson(json);
 
   @override
   final String? text;
@@ -145,6 +155,7 @@ class _$UpdatePostImpl implements _UpdatePost {
             (identical(other.date, date) || other.date == date));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, text, imageUrl, date);
 
@@ -155,6 +166,19 @@ class _$UpdatePostImpl implements _UpdatePost {
   @pragma('vm:prefer-inline')
   _$$UpdatePostImplCopyWith<_$UpdatePostImpl> get copyWith =>
       __$$UpdatePostImplCopyWithImpl<_$UpdatePostImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$UpdatePostImplToJson(
+      this,
+    );
+  }
+  
+  @override
+  Map<String, dynamic> toSQLite() {
+    // TODO: implement toSQLite
+    throw UnimplementedError();
+  }
 }
 
 abstract class _UpdatePost implements UpdatePost {
@@ -162,6 +186,9 @@ abstract class _UpdatePost implements UpdatePost {
       {final String? text,
       final String? imageUrl,
       final DateTime? date}) = _$UpdatePostImpl;
+
+  factory _UpdatePost.fromJson(Map<String, dynamic> json) =
+      _$UpdatePostImpl.fromJson;
 
   @override
   String? get text;

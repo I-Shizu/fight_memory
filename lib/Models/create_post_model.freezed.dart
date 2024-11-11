@@ -14,11 +14,18 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+CreatePost _$CreatePostFromJson(Map<String, dynamic> json) {
+  return _CreatePost.fromJson(json);
+}
+
 /// @nodoc
 mixin _$CreatePost {
   String get text => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
+
+  /// Serializes this CreatePost to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of CreatePost
   /// with the given fields replaced by the non-null parameter values.
@@ -118,10 +125,13 @@ class __$$CreatePostImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$CreatePostImpl implements _CreatePost {
   const _$CreatePostImpl(
       {required this.text, required this.date, this.imageUrl});
+
+  factory _$CreatePostImpl.fromJson(Map<String, dynamic> json) =>
+      _$$CreatePostImplFromJson(json);
 
   @override
   final String text;
@@ -146,6 +156,7 @@ class _$CreatePostImpl implements _CreatePost {
                 other.imageUrl == imageUrl));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, text, date, imageUrl);
 
@@ -156,6 +167,19 @@ class _$CreatePostImpl implements _CreatePost {
   @pragma('vm:prefer-inline')
   _$$CreatePostImplCopyWith<_$CreatePostImpl> get copyWith =>
       __$$CreatePostImplCopyWithImpl<_$CreatePostImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$CreatePostImplToJson(
+      this,
+    );
+  }
+  
+  @override
+  Map<String, dynamic> toSQLite() {
+    // TODO: implement toSQLite
+    throw UnimplementedError();
+  }
 }
 
 abstract class _CreatePost implements CreatePost {
@@ -163,6 +187,9 @@ abstract class _CreatePost implements CreatePost {
       {required final String text,
       required final DateTime date,
       final String? imageUrl}) = _$CreatePostImpl;
+
+  factory _CreatePost.fromJson(Map<String, dynamic> json) =
+      _$CreatePostImpl.fromJson;
 
   @override
   String get text;

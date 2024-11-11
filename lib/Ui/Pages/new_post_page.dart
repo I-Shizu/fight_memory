@@ -162,7 +162,7 @@ class _NewPostPageState extends State<NewPostPage> with AutomaticKeepAliveClient
                 } else {
                   await _postController.createPost(_postTextController.text, File(_postImageUrl!));
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const TopPage()),
+                    MaterialPageRoute(builder: (context) => TopPage()),
                   );
                 }
               },

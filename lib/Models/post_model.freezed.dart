@@ -14,12 +14,19 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+Post _$PostFromJson(Map<String, dynamic> json) {
+  return _Post.fromJson(json);
+}
+
 /// @nodoc
 mixin _$Post {
   int? get localId => throw _privateConstructorUsedError; // 自動インクリメントのIDとして使う
   String get text => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   String? get imageUrl => throw _privateConstructorUsedError;
+
+  /// Serializes this Post to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of Post
   /// with the given fields replaced by the non-null parameter values.
@@ -125,10 +132,13 @@ class __$$PostImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$PostImpl implements _Post {
   const _$PostImpl(
       {this.localId, required this.text, required this.date, this.imageUrl});
+
+  factory _$PostImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PostImplFromJson(json);
 
   @override
   final int? localId;
@@ -157,6 +167,7 @@ class _$PostImpl implements _Post {
                 other.imageUrl == imageUrl));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, localId, text, date, imageUrl);
 
@@ -167,6 +178,19 @@ class _$PostImpl implements _Post {
   @pragma('vm:prefer-inline')
   _$$PostImplCopyWith<_$PostImpl> get copyWith =>
       __$$PostImplCopyWithImpl<_$PostImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PostImplToJson(
+      this,
+    );
+  }
+  
+  @override
+  Map<String, dynamic> toSQLite() {
+    // TODO: implement toSQLite
+    throw UnimplementedError();
+  }
 }
 
 abstract class _Post implements Post {
@@ -175,6 +199,8 @@ abstract class _Post implements Post {
       required final String text,
       required final DateTime date,
       final String? imageUrl}) = _$PostImpl;
+
+  factory _Post.fromJson(Map<String, dynamic> json) = _$PostImpl.fromJson;
 
   @override
   int? get localId; // 自動インクリメントのIDとして使う
