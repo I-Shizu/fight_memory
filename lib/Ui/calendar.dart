@@ -9,7 +9,7 @@ class Calendar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedDay = ref.watch(selectedDayProvider) ?? DateTime.now();
+    final selectedDay = ref.watch(postDateProvider) ?? DateTime.now();
     final posts = ref.watch(postProvider);
 
     return Scaffold(
@@ -23,7 +23,7 @@ class Calendar extends ConsumerWidget {
               focusedDay: selectedDay,
               selectedDayPredicate: (day) => isSameDay(selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
-                ref.read(selectedDayProvider.notifier).state = selectedDay;
+                ref.read(postDateProvider.notifier).state = selectedDay;
                 ref.read(postProvider.notifier).fetchPostsForDay(selectedDay);
               },
               calendarFormat: CalendarFormat.month,
