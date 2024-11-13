@@ -24,8 +24,8 @@ class AlbumPage extends ConsumerWidget {
                   child: ListTile(
                     subtitle: Column(
                       children: [
-                        post.imageUrl != null
-                            ? Image.network(post.imageUrl!)
+                        post.imageFile != null
+                            ? Image.network(post.imageFile)
                             : Container(),
                         Text(
                           post.text,

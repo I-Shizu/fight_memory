@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Models/post_model.dart';
 import '../Repository/post_repository.dart';
@@ -18,5 +20,10 @@ final postDateProvider = StateProvider<DateTime?>((ref){
 });
 
 final localIdProvider = StateProvider<int?>((ref) {
+  return null;
+});
+
+//imageFileProviderの作成
+final imageFileProvider = StateProvider<File?>((ref) {
   return null;
 });

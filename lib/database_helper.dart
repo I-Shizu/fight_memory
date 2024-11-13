@@ -34,7 +34,7 @@ class DatabaseHelper {
         localId INTEGER PRIMARY KEY AUTOINCREMENT,
         text TEXT NOT NULL,
         date TEXT NOT NULL,
-        imageUrl TEXT,
+        imageFile TEXT,
       )
     ''');
   }

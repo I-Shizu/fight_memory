@@ -34,7 +34,7 @@ class PostNotifier extends StateNotifier<List<Post>> {
     final newPost = Post(
       text: text,
       date: DateTime.now(),
-      imageUrl: imageFile.path,
+      imageFile: imageFile.path,
     );
     await _repository.addPost(newPost);
     fetchPosts(); // 投稿を追加した後、リストを再取得して更新

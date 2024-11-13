@@ -41,8 +41,8 @@ class Calendar extends ConsumerWidget {
                         child: ListTile(
                           subtitle: Column(
                             children: [
-                              if (post.imageUrl != null)
-                                Image.network(post.imageUrl!)
+                              if (post.imageFile != null)
+                                Image.network(post.imageFile!)
                               else
                                 Container(),
                               Row(

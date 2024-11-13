@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../Provider/providers.dart';
 import '../../viewmodels/post_view_model.dart';
 import 'top_page.dart';
 
@@ -9,7 +10,6 @@ class AddPostPage extends ConsumerWidget {
   AddPostPage({super.key});
 
   final postTextProvider = StateProvider<String>((ref) => '');
-  final postImageProvider = StateProvider<File?>((ref) => null);
 
   Future<void> _pickImage(WidgetRef ref) async {
     try {
@@ -17,7 +17,7 @@ class AddPostPage extends ConsumerWidget {
       final pickedFile = await picker.pickImage(source: ImageSource.gallery);
       
       if (pickedFile != null) {
-        ref.read(postImageProvider.notifier).state = File(pickedFile.path);
+        ref.read(postImageFileProvider.notifier).state = File(pickedFile.path);
       }
     } on Exception catch (e) {
       print(e);
@@ -28,7 +28,7 @@ class AddPostPage extends ConsumerWidget {
   Widget build(BuildContext context,WidgetRef ref) {
 
     final postText = ref.watch(postTextProvider);
-    final postImage = ref.watch(postImageProvider);
+    final postImage = ref.watch(postImageFileProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('新しい投稿')),
