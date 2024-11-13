@@ -53,7 +53,10 @@ class Calendar extends ConsumerWidget {
                                   const Spacer(),
                                   IconButton(
                                     onPressed: () async {
-                                      await ref.read(postProvider.notifier).deletePost(post.localId!);
+                                      final localId = post.localId;
+                                      if(localId != null){
+                                        ref.read(postProvider.notifier).deletePost(localId);
+                                      }
                                     },
                                     icon: const Icon(Icons.delete),
                                   ),

@@ -16,3 +16,7 @@ final postListProvider = FutureProvider<List<Post>>((ref) async {
 final postDateProvider = StateProvider<DateTime?>((ref){ 
   return DateTime.now();
 });
+
+final localIdProvider = StateProvider<int?>((ref) {
+  return null;
+});

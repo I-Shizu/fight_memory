@@ -1,6 +1,4 @@
-import '../Models/create_post_model.dart';
 import '../Models/post_model.dart';
-import '../Models/update_post_model.dart';
 import '../database_helper.dart';
 
 class PostRepository {
@@ -31,13 +29,13 @@ class PostRepository {
   }
 
   // 新規投稿を追加
-  Future<void> addPost(CreatePost newPost) async {
+  Future<void> addPost(Post newPost) async {
     final db = await dbHelper.database;
     await db.insert('posts', newPost.toSQLite());
   }
 
   // 投稿を更新
-  Future<void> updatePost(int localId, UpdatePost updatedData) async {
+  Future<void> updatePost(int localId,Post updatedData) async {
     final db = await dbHelper.database;
     await db.update(
       'posts',

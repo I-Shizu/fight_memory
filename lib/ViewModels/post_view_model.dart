@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../Models/create_post_model.dart';
 import '../Models/post_model.dart';
-import '../Models/update_post_model.dart';
 import '../Provider/providers.dart';
 import '../Repository/post_repository.dart';
 
@@ -33,7 +31,7 @@ class PostNotifier extends StateNotifier<List<Post>> {
 
   // 投稿を追加
   Future<void> addPost(String text, File imageFile) async {
-    final newPost = CreatePost(
+    final newPost = Post(
       text: text,
       date: DateTime.now(),
       imageUrl: imageFile.path,
@@ -43,7 +41,7 @@ class PostNotifier extends StateNotifier<List<Post>> {
   }
 
   // 投稿を更新
-  Future<void> updatePost(int localId, UpdatePost updatedData) async {
+  Future<void> updatePost(int localId,Post updatedData) async {
     await _repository.updatePost(localId, updatedData);
     fetchPosts(); // 更新後に再取得
   }
