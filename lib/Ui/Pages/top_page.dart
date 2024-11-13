@@ -1,47 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'album_page.dart';
 import 'home_page.dart';
-import 'new_post_page.dart';
+import 'add_post_page.dart';
 
-class TopPage extends StatefulWidget {
-  const TopPage({super.key});
+// 現在のインデックスを管理するStateProvider
+final currentIndexProvider = StateProvider<int>((ref) => 0);
 
-  @override
-  State<TopPage> createState() => _TopPageState();
-}
-
-class _TopPageState extends State<TopPage> {
-  int _currentIndex = 0;
+class TopPage extends ConsumerWidget {
   final _pageWidgets = [
     const HomePage(),
-    const NewPostPage(),
+    AddPostPage(),
     const AlbumPage(),
   ];
-  
 
   @override
-  Widget build(BuildContext context) {
-    
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentIndex = ref.watch(currentIndexProvider);
+
     return Scaffold(
-      body:  _pageWidgets.elementAt(_currentIndex),
+      body: _pageWidgets.elementAt(currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ほーむ'),
           BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'にゅー'),
           BottomNavigationBarItem(icon: Icon(Icons.photo_album), label: 'あるばむ'),
         ],
-        currentIndex: _currentIndex,
+        currentIndex: currentIndex,
         fixedColor: Colors.blueAccent,
-        onTap: _onItemTapped,
+        onTap: (index) => ref.read(currentIndexProvider.notifier).state = index,
         type: BottomNavigationBarType.fixed,
-      ), 
+      ),
     );
-  }
-
-  void _onItemTapped(int index){
-    setState(() {
-      _currentIndex = index;
-    });
   }
 }
