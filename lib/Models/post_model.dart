@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
@@ -7,7 +5,7 @@ class Post {
   final int? localId;
   final String text;
   final DateTime date;
-  final File? imageFile;
+  final String? imageFile;
 
   Post( {
     this.localId,
@@ -21,7 +19,7 @@ class Post {
     return {
       'text': text,
       'date': date.toIso8601String(),
-      'imageUrl': imageFile,
+      'imageFile': imageFile,
     };
   }
 
@@ -29,7 +27,7 @@ class Post {
     return Post(
       text: data['text'] as String,
       date: DateTime.parse(data['date'] as String),
-      imageFile: data['imageFile'] as File?,
+      imageFile: data['imageFile'] as String?,
     );
   }
 }

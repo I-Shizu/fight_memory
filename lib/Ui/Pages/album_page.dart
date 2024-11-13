@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +27,7 @@ class AlbumPage extends ConsumerWidget {
                     subtitle: Column(
                       children: [
                         post.imageFile != null
-                            ? Image.network(post.imageFile)
+                            ? Image.file(File(post.imageFile!))
                             : Container(),
                         Text(
                           post.text,
