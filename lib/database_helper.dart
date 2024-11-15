@@ -1,11 +1,11 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
+
+    static const _databaseName = "fight_memory.db";
 
   DatabaseHelper._privateConstructor();
 
@@ -18,13 +18,21 @@ class DatabaseHelper {
 
   //データベースの接続
   Future<Database> _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'app_database.db');
+    final databasePath = await getDatabasesPath();
+    final path = join(databasePath, _databaseName);
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // バージョンを2に変更
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) { // バージョン1 → 2でカラム名変更
+      await db.execute('ALTER TABLE posts RENAME COLUMN imageUrl TO imageFile');
+      print('Upgraded database: Renamed column imageUrl to imageFile');
+    }
   }
 
   //データベースのテーブル作成
@@ -34,7 +42,7 @@ class DatabaseHelper {
         localId INTEGER PRIMARY KEY AUTOINCREMENT,
         text TEXT NOT NULL,
         date TEXT NOT NULL,
-        imageFile TEXT,
+        imageFile TEXT
       )
     ''');
   }

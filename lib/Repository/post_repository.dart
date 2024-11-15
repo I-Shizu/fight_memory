@@ -1,3 +1,5 @@
+import 'package:fight_app2/sqlite_mapper.dart';
+
 import '../Models/post_model.dart';
 import '../database_helper.dart';
 
@@ -8,7 +10,7 @@ class PostRepository {
   Future<List<Post>> getAllPosts() async {
     final db = await dbHelper.database;
     final result = await db.query('posts', orderBy: 'date DESC');
-    return result.map((data) => Post.fromSQLite(data)).toList();
+    return result.map((data) => SQLiteMapper.fromSQLite(data)).toList();
   }
 
   Future<List<Post>> getPostsForDay(DateTime selectedDay) async {
@@ -25,13 +27,13 @@ class PostRepository {
     );
 
     // 取得した結果をPostモデルに変換
-    return result.map((json) => Post.fromSQLite(json)).toList();
+    return result.map((json) => SQLiteMapper.fromSQLite(json)).toList();
   }
 
   // 新規投稿を追加
   Future<void> addPost(Post newPost) async {
     final db = await dbHelper.database;
-    await db.insert('posts', newPost.toSQLite());
+    await db.insert('posts', SQLiteMapper.toSQLite(newPost));
   }
 
   // 投稿を更新
@@ -39,7 +41,7 @@ class PostRepository {
     final db = await dbHelper.database;
     await db.update(
       'posts',
-      updatedData.toSQLite(),
+      SQLiteMapper.toSQLite(updatedData),
       where: 'localId = ?',
       whereArgs: [localId],
     );

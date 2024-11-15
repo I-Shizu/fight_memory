@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -23,8 +25,8 @@ class Calendar extends ConsumerWidget {
               focusedDay: selectedDay,
               selectedDayPredicate: (day) => isSameDay(selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
-                ref.read(postDateProvider.notifier).state = selectedDay;
-                ref.read(postProvider.notifier).fetchPostsForDay(selectedDay);
+                ref.watch(postDateProvider.notifier).state = selectedDay;
+                ref.watch(postProvider.notifier).fetchPostsForDay(selectedDay);
               },
               calendarFormat: CalendarFormat.month,
             ),
@@ -41,10 +43,8 @@ class Calendar extends ConsumerWidget {
                         child: ListTile(
                           subtitle: Column(
                             children: [
-                              if (post.imageFile != null)
-                                Image.network(post.imageFile!)
-                              else
-                                Container(),
+                              if (post.imageFile != null) Image.file(File(post.imageFile!))
+                              else Container(),
                               Row(
                                 children: [
                                   Text(
