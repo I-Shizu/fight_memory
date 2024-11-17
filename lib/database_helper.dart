@@ -31,7 +31,6 @@ class DatabaseHelper {
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) { // バージョン1 → 2でカラム名変更
       await db.execute('ALTER TABLE posts RENAME COLUMN imageUrl TO imageFile');
-      print('Upgraded database: Renamed column imageUrl to imageFile');
     }
   }
 
