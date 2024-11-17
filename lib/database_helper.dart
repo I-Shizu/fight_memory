@@ -1,11 +1,12 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
-    static const _databaseName = "fight_memory.db";
+  static const _databaseName = "fight_memory.db";
 
   DatabaseHelper._privateConstructor();
 
