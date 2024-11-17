@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import '../Models/post_model.dart';
 import '../Provider/providers.dart';
 import '../Repository/post_repository.dart';
+import 'package:path/path.dart';
 
 final postProvider = StateNotifierProvider<PostNotifier, List<Post>>((ref) {
   final repository = ref.watch(postRepositoryProvider);
@@ -19,7 +21,7 @@ class PostNotifier extends StateNotifier<List<Post>> {
 
   // 投稿を全件取得
   Future<void> fetchPosts() async {
-    final posts = await _repository.getAllPosts();
+    final posts = await _repository.getAllPostsFromDB();
     state = posts;
   }
 
@@ -31,13 +33,18 @@ class PostNotifier extends StateNotifier<List<Post>> {
 
   // 投稿を追加
   Future<void> addPost(String text, File imageFile) async {
+    // 永続ディレクトリに画像を保存
+    final appDir = await getApplicationDocumentsDirectory();
+    final filePath = '${appDir.path}/${basename(imageFile.path)}';
+    await imageFile.copy(filePath);
+
+    // データベースに投稿を保存
     final newPost = Post(
       text: text,
       date: DateTime.now(),
-      imageFile: imageFile.path,
+      imageFile: filePath, // 永続ディレクトリのパスを保存
     );
-    await _repository.addPost(newPost);
-    fetchPosts(); // 投稿を追加した後、リストを再取得して更新
+    await _repository.addPostToDB(newPost.text, newPost.date, image: File(newPost.imageFile!));
   }
 
   // 投稿を更新

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../Models/post_model.dart';
 import '../Repository/post_repository.dart';
@@ -12,7 +11,7 @@ final postRepositoryProvider = Provider<PostRepository>((ref) {
 
 final postListProvider = FutureProvider<List<Post>>((ref) async {
   final repository = ref.watch(postRepositoryProvider);
-  return await repository.getAllPosts();
+  return await repository.getAllPostsFromDB();
 });
 
 final postDateProvider = StateProvider<DateTime?>((ref){ 

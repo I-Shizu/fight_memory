@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import '../database_helper.dart';
 
-class ImageRepository {
+class PostImageRepository {
 
   //永続ディレクトリに画像のパスを保存する
   Future<String> saveImagePathToPersistentDirectory(File image) async {
@@ -28,11 +28,18 @@ class ImageRepository {
   //SQLiteから画像ファイルを取得する
   Future<File?> getImagePathFromDatabase(String filePath) async {
     final db = await DatabaseHelper.instance.database;
-    final List<Map<String, dynamic>> images = await db.query('images');
+
+    // 特定の画像パスを検索
+    final List<Map<String, dynamic>> images = await db.query(
+      'images',
+      where: 'path = ?',
+      whereArgs: [filePath],
+    );
+
     if (images.isEmpty) return null;
 
-    final filePath = images.first['path'] as String;
-    final file = File(filePath);
+    final retrievedPath = images.first['path'] as String;
+    final file = File(retrievedPath);
 
     return file.existsSync() ? file : null;
   } 

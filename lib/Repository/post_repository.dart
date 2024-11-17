@@ -1,18 +1,21 @@
-import 'package:fight_app2/sqlite_mapper.dart';
-
+import 'dart:io';
+import '../Repository/post_image_repository.dart';
+import '../sqlite_mapper.dart';
 import '../Models/post_model.dart';
 import '../database_helper.dart';
 
 class PostRepository {
+  final PostImageRepository _postImageRepository = PostImageRepository();
   final dbHelper = DatabaseHelper.instance;
 
   // 全投稿を取得
-  Future<List<Post>> getAllPosts() async {
+  Future<List<Post>> getAllPostsFromDB() async {
     final db = await dbHelper.database;
     final result = await db.query('posts', orderBy: 'date DESC');
     return result.map((data) => SQLiteMapper.fromSQLite(data)).toList();
   }
 
+  //日にちごとに投稿を取得
   Future<List<Post>> getPostsForDay(DateTime selectedDay) async {
     final db = await dbHelper.database;
     // 選択された日付の0時と23時59分59秒を取得して、その日の投稿を取得
@@ -31,7 +34,23 @@ class PostRepository {
   }
 
   // 新規投稿を追加
-  Future<void> addPost(Post newPost) async {
+  Future<void> addPostToDB(String text, DateTime date, {File? image}) async {
+    // 画像がある場合は保存し、パスを取得
+    String? imagePath;
+    if (image != null) {
+      imagePath = await _postImageRepository.saveImagePathToPersistentDirectory(image);
+      print("保存した画像パス: $imagePath"); // デバッグ用
+    }
+
+    // Post モデルを作成
+    final newPost = Post(
+      localId: null, // 自動生成されるため null
+      text: text,
+      date: date,
+      imageFile: imagePath,
+    );
+
+    // データベースに保存
     final db = await dbHelper.database;
     await db.insert('posts', SQLiteMapper.toSQLite(newPost));
   }

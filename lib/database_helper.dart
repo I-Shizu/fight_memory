@@ -30,10 +30,30 @@ class DatabaseHelper {
   }
 
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) { // バージョン1 → 2でカラム名変更
-      await db.execute('ALTER TABLE posts RENAME COLUMN imageUrl TO imageFile');
-    }
+  if (oldVersion < 2) {
+    // 新しいテーブルを作成
+    await db.execute('''
+      CREATE TABLE posts_new (
+        localId INTEGER PRIMARY KEY AUTOINCREMENT,
+        text TEXT NOT NULL,
+        date TEXT NOT NULL,
+        imageFile TEXT
+      )
+    ''');
+
+    // 古いテーブルからデータをコピー
+    await db.execute('''
+      INSERT INTO posts_new (localId, text, date, imageFile)
+      SELECT localId, text, date, imageUrl FROM posts
+    ''');
+
+    // 古いテーブルを削除
+    await db.execute('DROP TABLE posts');
+
+    // 新しいテーブルをリネーム
+    await db.execute('ALTER TABLE posts_new RENAME TO posts');
   }
+}
 
   //データベースのテーブル作成
   Future _onCreate(Database db, int version) async {
