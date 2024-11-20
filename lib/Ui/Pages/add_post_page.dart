@@ -95,6 +95,8 @@ class AddPostPage extends ConsumerWidget {
                   } else {
                     // テキストと画像をPostRepositoryに渡して保存処理を実行
                     await ref.read(postProvider.notifier).addPost(postText,postImage);
+                    //画像をnullに設定
+                    ref.read(postImageFileProvider.notifier).state = null;
                     //BottomNavigationBarをHomePageに設定
                     ref.read(currentIndexProvider.notifier).state = 0;
                     //現在のページを閉じる
