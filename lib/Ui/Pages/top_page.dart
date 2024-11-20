@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../../Provider/providers.dart';
 import 'album_page.dart';
 import 'home_page.dart';
 import 'add_post_page.dart';
 
-// 現在のインデックスを管理するStateProvider
-final currentIndexProvider = StateProvider<int>((ref) => 0);
-
 class TopPage extends ConsumerWidget {
-  final _pageWidgets = [
+  final List<Widget> _pageWidgets = [
     const HomePage(),
     AddPostPage(),
     const AlbumPage(),

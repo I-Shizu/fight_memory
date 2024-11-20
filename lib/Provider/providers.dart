@@ -23,6 +23,8 @@ final localIdProvider = StateProvider<int?>((ref) {
   return null;
 });
 
+final currentIndexProvider = StateProvider<int>((ref) => 0);
+
 //imageFileProviderの作成
 final postImageFileProvider = StateProvider<File?>((ref) {
   return null;
