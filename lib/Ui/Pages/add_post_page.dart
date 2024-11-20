@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../Provider/providers.dart';
-import '../../viewmodels/post_view_model.dart';
+import '../ViewModels/post_view_model.dart';
 import 'top_page.dart';
 
 class AddPostPage extends ConsumerWidget {

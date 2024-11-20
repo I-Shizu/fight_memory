@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../Models/post_model.dart';
-import '../Provider/providers.dart';
-import '../Repository/post_repository.dart';
+import '../../Models/post_model.dart';
+import '../../Provider/providers.dart';
+import '../../Repository/post_repository.dart';
 
 final postProvider = StateNotifierProvider<PostNotifier, List<Post>>((ref) {
   final repository = ref.watch(postRepositoryProvider);

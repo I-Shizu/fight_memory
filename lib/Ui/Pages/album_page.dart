@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../ViewModels/post_view_model.dart';
+import '../ViewModels/post_view_model.dart';
 
 class AlbumPage extends ConsumerWidget {
   const AlbumPage({super.key});

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../Provider/providers.dart';
-import '../viewmodels/post_view_model.dart';
+import 'ViewModels/post_view_model.dart';
 
 class Calendar extends ConsumerWidget {
   const Calendar({super.key});
