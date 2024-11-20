@@ -1,4 +1,4 @@
-import 'package:fight_app2/sqlite_mapper.dart';
+import 'package:fight_app2/Utils/sqlite_mapper.dart';
 
 import '../Models/post_model.dart';
 import '../database_helper.dart';
