@@ -1,4 +1,4 @@
-import 'Models/post_model.dart';
+import 'Data/Models/post_model.dart';
 
 class SQLiteMapper {
   static Map<String, dynamic> toSQLite(Post post) {

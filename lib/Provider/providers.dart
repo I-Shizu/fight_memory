@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../Models/post_model.dart';
-import '../Repository/post_repository.dart';
+import '../Data/Models/post_model.dart';
+import '../Data/Repository/post_repository.dart';
 
 //ビジネスロジックの状態管理をするProvider
 //Provider(定数)を管理する
