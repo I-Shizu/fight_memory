@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'package:fight_app2/Ui/Pages/top_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../Provider/providers.dart';
 import '../ViewModels/post_view_model.dart';
-import 'top_page.dart';
 
 class AddPostPage extends ConsumerWidget {
   AddPostPage({super.key});
@@ -95,10 +95,12 @@ class AddPostPage extends ConsumerWidget {
                   } else {
                     // テキストと画像をPostRepositoryに渡して保存処理を実行
                     await ref.read(postProvider.notifier).addPost(postText,postImage);
-                    
-                    // 保存後、トップページへ遷移
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => TopPage()),
+                    //BottomNavigationBarをHomePageに設定
+                    ref.read(currentIndexProvider.notifier).state = 0;
+                    //現在のページを閉じる
+                    Navigator.pushReplacement(
+                      context, 
+                      MaterialPageRoute(builder: (context) => TopPage())
                     );
                   }
                 },
