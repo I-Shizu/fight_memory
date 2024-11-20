@@ -9,7 +9,7 @@ import 'add_post_page.dart';
 final currentIndexProvider = StateProvider<int>((ref) => 0);
 
 class TopPage extends ConsumerWidget {
-  final _pageWidgets = [
+  final List<Widget> _pageWidgets = [
     const HomePage(),
     AddPostPage(),
     const AlbumPage(),
