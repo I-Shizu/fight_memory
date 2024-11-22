@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../Data/Models/post_model.dart';
-import '../../Provider/providers.dart';
 import '../../Data/Repository/post_repository.dart';
+import '../../Provider/providers.dart';
+
 
 final postProvider = StateNotifierProvider<PostNotifier, List<Post>>((ref) {
   final repository = ref.watch(postRepositoryProvider);
@@ -11,44 +12,46 @@ final postProvider = StateNotifierProvider<PostNotifier, List<Post>>((ref) {
 });
 
 class PostNotifier extends StateNotifier<List<Post>> {
-  final PostRepository _repository;
+  final PostRepository repository;
 
-  PostNotifier(this._repository) : super([]) {
+  PostNotifier(this.repository) : super([]) {
     fetchPosts(); // 初期化時に投稿リストを取得
   }
 
   // 投稿を全件取得
   Future<void> fetchPosts() async {
-    final posts = await _repository.getAllPosts();
+    final posts = await repository.getAllPosts();
     state = posts;
   }
 
    // 選択された日付に基づいて投稿を取得
   Future<void> fetchPostsForDay(DateTime selectedDay) async {
-    final posts = await _repository.getPostsForDay(selectedDay);
+    final posts = await repository.getPostsForDay(selectedDay);
     state = posts;
   }
 
   // 投稿を追加
   Future<void> addPost(String text, File imageFile) async {
     final newPost = Post(
+      localId: null,
       text: text,
       date: DateTime.now(),
       imageFile: imageFile.path,
     );
-    await _repository.addPost(newPost);
-    fetchPosts(); // 投稿を追加した後、リストを再取得して更新
+
+    final int localId = await repository.addPost(newPost);
+    fetchPosts(); 
   }
 
   // 投稿を更新
   Future<void> updatePost(int localId,Post updatedData) async {
-    await _repository.updatePost(localId, updatedData);
-    fetchPosts(); // 更新後に再取得
+    await repository.updatePost(localId, updatedData);
+    fetchPosts(); 
   }
 
   // 投稿を削除
   Future<void> deletePost(int localId) async {
-    await _repository.deletePost(localId);
-    fetchPosts(); // 削除後に再取得
+    await repository.deletePost(localId);
+    fetchPosts(); 
   }
 }
