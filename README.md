@@ -1,19 +1,100 @@
 # fight_memory
 
-A new Flutter project.
+fight_memoryは、日常の出来事やアイデアを記録し、振り返りを簡単に行えるシンプルなアプリケーションです。**Flutterを使用して開発**し、ローカルデータ管理と使いやすいUIに重点を置いています。
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🎯 プロジェクトの概要
 
-A few resources to get you started if this is your first Flutter project:
+- **記録管理の効率化**  
+  メモや画像の保存を簡単にし、過去のデータを日付ごとに整理。
+- **技術スタックの実践**  
+  FlutterとRiverpodを活用したアーキテクチャ設計を学ぶために構築。
+- **ポートフォリオとしての役割**  
+  自分のスキルを示し、開発の流れを理解してもらう目的で公開。
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# fight_memory
-dev branch commit
-feature branch commit
+## 🔑 主な機能
+
+- **ローカルデータ管理**: SQLiteを使用してメモや画像を保存。  
+- **カレンダー機能**: 過去の記録を直感的に確認できるカレンダー表示。  
+- **簡潔なUI**: 初学者から上級者まで使いやすいデザインを採用。  
+- **画像アップロード**: デバイスストレージに画像を保存し、パスをデータとして管理。
+
+---
+
+## 🛠 使用技術
+
+- **Flutter** (Dart)
+- 状態管理: **Riverpod**
+- ローカルデータベース: **SQLite**
+- ユーザーインターフェース: **Flutter Hooks**, **Table Calendar**
+- デザインパターン: **MVVM**
+
+---
+
+## 📂 プロジェクト構成
+
+lib/
+├── models/           # データモデル
+├── providers/        # 状態管理用プロバイダー
+├── screens/          # 各画面のUI
+├── utils/            # ユーティリティ関数
+└── widgets/          # 共通コンポーネント
+
+---
+
+## 🚀 インストール手順
+
+FVMを使用して、プロジェクトをセットアップします。
+
+1. **リポジトリをクローン**  
+   ターミナルで以下を実行します：
+
+   ```bash
+   git clone https://github.com/I-Shizu/fight_memory.git
+   cd fight_memory
+
+	2.	FVMを使ったFlutterバージョンの管理
+FVMがインストールされていることを確認してください。インストール済みでない場合は、以下を参考にインストールしてください。
+FVM GitHubリポジトリ
+
+fvm install
+fvm use
+
+
+	3.	依存パッケージをインストール
+
+fvm flutter pub get
+
+
+	4.	アプリを起動
+
+fvm flutter run
+
+📷 スクリーンショット
+
+	現在のアプリの画面を示す画像をここに追加してください
+例: ホーム画面、カレンダー表示、メモ追加画面など
+
+🌟 アピールポイント
+
+	1.	Flutter開発経験の実証
+ローカルデータベースを活用したデータ管理を実装。
+	2.	アーキテクチャの実践
+RiverpodとMVVMパターンを採用し、保守性を考慮した設計。
+	3.	カスタムUI
+シンプルかつ直感的なユーザー体験を提供。
+
+📝 今後の改善ポイント
+
+	•	アニメーションの追加
+	•	ダークモード対応
+	•	テストの自動化（ユニットテスト、ウィジェットテスト）
+
+✨ 開発者情報
+
+	•	名前: あなたの名前
+	•	GitHub: https://github.com/I-Shizu
+	•	Twitter: https://x.com/shizufishing?s=21
