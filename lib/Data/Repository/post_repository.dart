@@ -31,9 +31,10 @@ class PostRepository {
   }
 
   // 新規投稿を追加
-  Future<void> addPost(Post newPost) async {
+  Future<int> addPost(Post newPost) async {
     final db = await dbHelper.database;
-    await db.insert('posts', SQLiteMapper.toSQLite(newPost));
+    final int localId = await db.insert('posts', SQLiteMapper.toSQLite(newPost));
+    return localId;
   }
 
   // 投稿を更新
@@ -50,6 +51,7 @@ class PostRepository {
   // 特定の投稿を削除
   Future<void> deletePost(int localId) async {
     final db = await dbHelper.database;
+    print('Attempting to delete post with localId: $localId');
     await db.delete(
       'posts',
       where: 'localId = ?',
