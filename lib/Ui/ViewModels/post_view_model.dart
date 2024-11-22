@@ -32,23 +32,24 @@ class PostNotifier extends StateNotifier<List<Post>> {
   // 投稿を追加
   Future<void> addPost(String text, File imageFile) async {
     final newPost = Post(
+      localId: null,
       text: text,
       date: DateTime.now(),
       imageFile: imageFile.path,
     );
     await _repository.addPost(newPost);
-    fetchPosts(); // 投稿を追加した後、リストを再取得して更新
+    fetchPosts(); 
   }
 
   // 投稿を更新
   Future<void> updatePost(int localId,Post updatedData) async {
     await _repository.updatePost(localId, updatedData);
-    fetchPosts(); // 更新後に再取得
+    fetchPosts(); 
   }
 
   // 投稿を削除
   Future<void> deletePost(int localId) async {
     await _repository.deletePost(localId);
-    fetchPosts(); // 削除後に再取得
+    fetchPosts(); 
   }
 }

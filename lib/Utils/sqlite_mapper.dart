@@ -11,9 +11,10 @@ class SQLiteMapper {
 
   static Post fromSQLite(Map<String, dynamic> data) {
     return Post(
+      localId: null,
       text: data['text'] as String,
       date: DateTime.parse(data['date'] as String),
-      imageFile: data['imageFile'] as String?,
+      imageFile: data['imageFile'] as String?, 
     );
   }
 }
