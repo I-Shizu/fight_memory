@@ -51,5 +51,10 @@
 	<string>カメラへのアクセスが必要です。</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Access to pick a photo</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+	<key>NSAllowsArbitraryLoads</key>
+	<true/>
+	</dict>
 </dict>
 </plist>

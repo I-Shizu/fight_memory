@@ -45,6 +45,8 @@ dependencies:
   flutter_riverpod:
   flutter_hooks:
   freezed_annotation:
+  url_launcher: ^6.3.1
+  webview_flutter:
 
 dev_dependencies:
   flutter_test:
