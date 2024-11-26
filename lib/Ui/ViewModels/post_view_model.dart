@@ -6,15 +6,15 @@ import '../../Data/Repository/post_repository.dart';
 import '../../Provider/providers.dart';
 
 
-final postProvider = StateNotifierProvider<PostNotifier, List<Post>>((ref) {
+final postProvider = StateNotifierProvider<PostViewModel, List<Post>>((ref) {
   final repository = ref.watch(postRepositoryProvider);
-  return PostNotifier(repository);
+  return PostViewModel(repository);
 });
 
-class PostNotifier extends StateNotifier<List<Post>> {
+class PostViewModel extends StateNotifier<List<Post>> {
   final PostRepository repository;
 
-  PostNotifier(this.repository) : super([]) {
+  PostViewModel(this.repository) : super([]) {
     fetchPosts(); // 初期化時に投稿リストを取得
   }
 
