@@ -40,7 +40,10 @@ class AddPostPage extends ConsumerWidget {
                 onTap: () async {
                   var permitStatus = await Permission.photos.request();
 
-                  if(permitStatus.isGranted) _pickImage(ref);
+                  if(permitStatus.isGranted) {
+                    ref.read(permissionGrantedProvider.notifier).state = true;
+                    await _pickImage(ref);
+                  }
                   if(permitStatus.isDenied) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text('写真ライブラリへのアクセスが拒否されました')),
