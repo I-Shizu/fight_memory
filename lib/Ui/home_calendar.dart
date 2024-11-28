@@ -13,10 +13,12 @@ class Calendar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDay = ref.watch(postDateProvider) ?? DateTime.now();
     final posts = ref.watch(postProvider);
+    final permissionGranted = ref.watch(permissionGrantedProvider);
 
     return Scaffold(
       body: Column(
         children: [
+          //カレンダー
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TableCalendar(
@@ -31,43 +33,59 @@ class Calendar extends ConsumerWidget {
               calendarFormat: CalendarFormat.month,
             ),
           ),
+          //投稿表示
           Expanded(
-            child: posts.isEmpty
-                ? const Center(child: Text("まだ投稿はありません"))
-                : ListView.builder(
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      final post = posts[index];
+            child: Consumer(
+              builder: (BuildContext context, WidgetRef ref, Widget? child) {
 
-                      return Card(
-                        child: ListTile(
-                          subtitle: Column(
-                            children: [
-                              if (post.imageFile != null) Image.file(File(post.imageFile!))
-                              else Container(),
-                              Row(
-                                children: [
-                                  Text(
-                                    '${post.date.year}/${post.date.month}/${post.date.day}',
-                                  ),
-                                  const Spacer(),
-                                  IconButton(
-                                    onPressed: () async {
-                                      final localId = post.localId;
-                                      if(localId != null){
-                                        ref.read(postProvider.notifier).deletePost(localId);
-                                      }
-                                    },
-                                    icon: const Icon(Icons.delete),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                if(!permissionGranted){
+                  return Center(
+                    child: Text('まだ投稿はありません'),
+                  );
+                }
+
+                if (posts.isEmpty) {
+                  return Center(
+                    child: Text('まだ投稿はありません'),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    final post = posts[index];
+                
+                    return Card(
+                      child: ListTile(
+                        subtitle: Column(
+                          children: [
+                            if (post.imageFile != null) Image.file(File(post.imageFile!))
+                            else Container(),
+                            Row(
+                              children: [
+                                Text(
+                                  '${post.date.year}/${post.date.month}/${post.date.day}',
+                                ),
+                                const Spacer(),
+                                IconButton(
+                                  onPressed: () async {
+                                    final localId = post.localId;
+                                    if(localId != null){
+                                      ref.read(postProvider.notifier).deletePost(localId);
+                                    }
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
