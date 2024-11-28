@@ -29,3 +29,6 @@ final currentIndexProvider = StateProvider<int>((ref) => 0);
 final postImageFileProvider = StateProvider<File?>((ref) {
   return null;
 });
+
+//写真フォルダへのアクセス許可を管理
+final permissionGrantedProvider = StateProvider<bool>((ref) => false);

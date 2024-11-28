@@ -3,6 +3,7 @@ import 'package:fight_app2/Ui/Pages/top_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../Provider/providers.dart';
 import '../ViewModels/post_view_model.dart';
 
@@ -12,15 +13,11 @@ class AddPostPage extends ConsumerWidget {
   final postTextProvider = StateProvider<String>((ref) => '');
 
   Future<void> _pickImage(WidgetRef ref) async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-      
-      if (pickedFile != null) {
-        ref.read(postImageFileProvider.notifier).state = File(pickedFile.path);
-      }
-    } on Exception catch (e) {
-      print(e);
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    
+    if (pickedFile != null) {
+      ref.read(postImageFileProvider.notifier).state = File(pickedFile.path);
     }
   }
 
@@ -40,8 +37,30 @@ class AddPostPage extends ConsumerWidget {
             children: [
               // 画像選択エリア
               GestureDetector(
-                onTap: () {
-                  _pickImage(ref);
+                onTap: () async {
+                  var permitStatus = await Permission.photos.request();
+
+                  if(permitStatus.isGranted) {
+                    ref.read(permissionGrantedProvider.notifier).state = true;
+                    await _pickImage(ref);
+                  }
+                  if(permitStatus.isDenied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('写真ライブラリへのアクセスが拒否されました')),
+                    );
+                  }
+                  if(permitStatus.isPermanentlyDenied) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('設定から写真ライブラリへのアクセスを許可してください'),
+                        action: SnackBarAction(
+                          label: '設定を開く',
+                          onPressed: () => openAppSettings(),
+                        ),
+                      ),
+                    );
+                  }
+
                   FocusScope.of(context).unfocus();
                 },
                 child: Container(
