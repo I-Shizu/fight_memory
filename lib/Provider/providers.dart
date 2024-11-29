@@ -10,22 +10,26 @@ final postRepositoryProvider = Provider<PostRepository>((ref) {
   return PostRepository();
 });
 
+//投稿リストの管理
 final postListProvider = FutureProvider<List<Post>>((ref) async {
   final repository = ref.watch(postRepositoryProvider);
   return await repository.getAllPosts();
 });
 
+//投稿日時の管理
 final postDateProvider = StateProvider<DateTime?>((ref){ 
   return DateTime.now();
 });
 
+//
 final localIdProvider = StateProvider<int?>((ref) {
   return null;
 });
 
+//ページの場所を管理
 final currentIndexProvider = StateProvider<int>((ref) => 0);
 
-//imageFileProviderの作成
+//選択した画像の表示を管理
 final postImageFileProvider = StateProvider<File?>((ref) {
   return null;
 });
