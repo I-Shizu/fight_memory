@@ -18,7 +18,7 @@ class Calendar extends ConsumerWidget {
     return Scaffold(
       body: Column(
         children: [
-          //カレンダー
+          // カレンダー
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TableCalendar(
@@ -28,64 +28,66 @@ class Calendar extends ConsumerWidget {
               selectedDayPredicate: (day) => isSameDay(selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
                 ref.watch(postDateProvider.notifier).state = selectedDay;
-                ref.watch(postProvider.notifier).fetchPostsForDay(selectedDay);
+
+                // アクセス許可がある場合のみ投稿を取得
+                if (permissionGranted) {
+                  ref.watch(postProvider.notifier).fetchPostsForDay(selectedDay);
+                } else {
+                  // アクセス許可がない場合の処理（例: ダイアログ表示）
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('フォルダアクセスの許可が必要です')),
+                  );
+                }
               },
               calendarFormat: CalendarFormat.month,
             ),
           ),
-          //投稿表示
+          // 投稿表示
           Expanded(
-            child: Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            child: permissionGranted
+                ? posts.isEmpty
+                    ? const Center(child: Text('まだ投稿はありません'))
+                    : ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          final post = posts[index];
 
-                if(!permissionGranted){
-                  return Center(
-                    child: Text('まだ投稿はありません'),
-                  );
-                }
-
-                if (posts.isEmpty) {
-                  return Center(
-                    child: Text('まだ投稿はありません'),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    final post = posts[index];
-                
-                    return Card(
-                      child: ListTile(
-                        subtitle: Column(
-                          children: [
-                            if (post.imageFile != null) Image.file(File(post.imageFile!))
-                            else Container(),
-                            Row(
-                              children: [
-                                Text(
-                                  '${post.date.year}/${post.date.month}/${post.date.day}',
-                                ),
-                                const Spacer(),
-                                IconButton(
-                                  onPressed: () async {
-                                    final localId = post.localId;
-                                    if(localId != null){
-                                      ref.read(postProvider.notifier).deletePost(localId);
-                                    }
-                                  },
-                                  icon: const Icon(Icons.delete),
-                                ),
-                              ],
+                          return Card(
+                            child: ListTile(
+                              subtitle: Column(
+                                children: [
+                                  if (post.imageFile != null)
+                                    Image.file(File(post.imageFile!))
+                                  else
+                                    Container(),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        '${post.date.year}/${post.date.month}/${post.date.day}',
+                                      ),
+                                      const Spacer(),
+                                      IconButton(
+                                        onPressed: () async {
+                                          final localId = post.localId;
+                                          if (localId != null) {
+                                            ref
+                                                .read(postProvider.notifier)
+                                                .deletePost(localId);
+                                          }
+                                        },
+                                        icon: const Icon(Icons.delete),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+                          );
+                        },
+                      )
+                : const Center(
+                    child: Text('フォルダアクセスの許可が必要です'),
+                  ),
           ),
         ],
       ),
