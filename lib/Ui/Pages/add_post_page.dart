@@ -3,7 +3,7 @@ import 'package:fight_app2/Ui/Pages/top_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../utils/permission_util.dart'; // 追加
+import 'package:permission_handler/permission_handler.dart';
 import '../../Provider/providers.dart';
 import '../ViewModels/post_view_model.dart';
 
@@ -11,7 +11,6 @@ class AddPostPage extends ConsumerWidget {
   AddPostPage({super.key});
 
   final postTextProvider = StateProvider<String>((ref) => '');
-  final GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>(); // 追加
 
   Future<void> _pickImage(WidgetRef ref) async {
     final picker = ImagePicker();
@@ -29,7 +28,6 @@ class AddPostPage extends ConsumerWidget {
     final permissionGranted = ref.watch(permissionGrantedProvider);
 
     return Scaffold(
-      key: messengerKey, // GlobalKeyを設定
       appBar: AppBar(title: const Text('新しい投稿')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -41,7 +39,26 @@ class AddPostPage extends ConsumerWidget {
               GestureDetector(
                 onTap: () async {
                   if (!permissionGranted) {
-                    await requestPermission(ref, messengerKey); // GlobalKeyを渡す
+                    showDialog(
+                      context: context, 
+                      builder: (context) => AlertDialog(
+                        title: const Text('アクセスが拒否されました'),
+                          content: const Text('設定画面からアクセスを許可してください。'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              child: const Text('閉じる'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                openAppSettings();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('設定を開く'),
+                            ),
+                          ],
+                      )
+                    );
                   }
                   if (ref.read(permissionGrantedProvider)) {
                     await _pickImage(ref);
@@ -83,14 +100,14 @@ class AddPostPage extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () async {
                   if (postText.isEmpty) {
-                    messengerKey.currentState?.showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('エラー：テキストを入力してください'),
                         duration: Duration(seconds: 2),
                       ),
                     );
                   } else if (postImage == null) {
-                    messengerKey.currentState?.showSnackBar(
+                    ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('エラー：画像を選択してください'),
                         duration: Duration(seconds: 2),
