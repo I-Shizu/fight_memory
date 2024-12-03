@@ -1,11 +1,17 @@
-import 'package:fight_app2/Ui/Pages/web_view_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../Provider/providers.dart';
+import 'web_view_page.dart';
 
-class ListPage extends StatelessWidget {
+class ListPage extends ConsumerWidget {
   const ListPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // プロバイダから状態を取得
+    final isDarkTheme = ref.watch(themeProvider);
+    final isNotificationEnabled = ref.watch(notificationProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('リストページ'),
@@ -23,18 +29,20 @@ class ListPage extends StatelessWidget {
             Expanded(
               child: ListView(
                 children: [
-                  _buildCard(
+                  _urlCard(
                     context,
                     icon: Icons.contact_mail,
                     title: 'お問い合わせ',
                     url: 'https://docs.google.com/forms/d/e/1FAIpQLSfC07B7amecHg9ADznRxjbET2gAqhf49W_LebXUP-F_jYVOug/viewform',
                   ),
-                  _buildCard(
+                  _urlCard(
                     context,
                     icon: Icons.article,
                     title: '利用規約',
                     url: 'https://www.kiyac.app/privacypolicy/sBvSLzCgPJ3B7JeCjQOA',
                   ),
+                  _toggleThemeCard(ref, isDarkTheme),
+                  _notificationSettingCard(ref, isNotificationEnabled),
                 ],
               ),
             ),
@@ -44,7 +52,7 @@ class ListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCard(BuildContext context,
+  Widget _urlCard(BuildContext context,
       {required IconData icon, required String title, required String url}) {
     return Card(
       elevation: 4.0,
@@ -71,6 +79,60 @@ class ListPage extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _toggleThemeCard(WidgetRef ref, bool isDarkTheme) {
+    return Card(
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            const Icon(Icons.brightness_6, size: 32),
+            const SizedBox(width: 16),
+            const Text(
+              'ライトテーマ',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            Switch(
+              value: isDarkTheme,
+              onChanged: (value) {
+                ref.read(themeProvider.notifier).toggleTheme();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _notificationSettingCard(WidgetRef ref, bool isNotificationEnabled) {
+    return Card(
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            const Icon(Icons.notifications, size: 32),
+            const SizedBox(width: 16),
+            const Text(
+              '通知設定',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            Switch(
+              value: isNotificationEnabled,
+              onChanged: (value) {
+                ref.read(notificationProvider.notifier).toggleNotification();
+              },
+            ),
+          ],
         ),
       ),
     );
