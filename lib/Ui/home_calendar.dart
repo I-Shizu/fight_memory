@@ -47,16 +47,16 @@ class Calendar extends ConsumerWidget {
           ),
           // 投稿表示
           Expanded(
-            child: permissionGranted
-                ? posts.isEmpty
-                    ? const Center(child: Text('まだ投稿はありません'))
-                    : ListView.builder(
-                        itemCount: posts.length,
-                        itemBuilder: (context, index) {
-                          final post = posts[index];
+            child: Builder(
+              builder: (context) {
+                if (!permissionGranted) {
+                  return const Center(
+                    child: Text('フォルダアクセスの許可が必要です'),
+                  );
+                }
 
                 if (posts.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: Text('まだ投稿はありません'),
                   );
                 }
@@ -65,13 +65,14 @@ class Calendar extends ConsumerWidget {
                   itemCount: posts.length,
                   itemBuilder: (context, index) {
                     final post = posts[index];
-                
                     return Card(
                       child: ListTile(
                         subtitle: Column(
                           children: [
-                            if (post.imageFile != null) Image.file(File(post.imageFile!))
-                            else Container(),
+                            if (post.imageFile != null)
+                              Image.file(File(post.imageFile!))
+                            else
+                              Container(),
                             Row(
                               children: [
                                 Text(
@@ -81,47 +82,51 @@ class Calendar extends ConsumerWidget {
                                 IconButton(
                                   onPressed: () async {
                                     final localId = post.localId;
-                                    
-                                    if (localId != null) {
-                                      final bool? confirmDelete = await showDialog<bool>(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('削除の確認'),
-                                            content: Text('この投稿を削除してもよろしいですか？'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(false); // キャンセル
-                                                },
-                                                child: Text('キャンセル'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(true); // 削除実行
-                                                },
-                                                child: Text('削除'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                      if (confirmDelete == true) {
-                                        ref.read(postProvider.notifier).deletePost(localId);
-                                      }
+                                    if (localId == null) {
+                                      return;
+                                    }
+
+                                    final bool? confirmDelete = await showDialog<bool>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('削除の確認'),
+                                          content: const Text('この投稿を削除してもよろしいですか？'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(false); // キャンセル
+                                              },
+                                              child: const Text('キャンセル'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true); // 削除実行
+                                              },
+                                              child: const Text('削除'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+
+                                    if (confirmDelete == true) {
+                                      ref.read(postProvider.notifier).deletePost(localId);
                                     }
                                   },
                                   icon: const Icon(Icons.delete),
                                 ),
-                              ]
+                              ],
                             ),
-                          );
-                        },
-                      )
-                : const Center(
-                    child: Text('フォルダアクセスの許可が必要です'),
-                  ),
-          ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          )
         ],
       ),
     );
