@@ -10,12 +10,17 @@ Future<void> requestPermission(
 
   if (status.isGranted) {
     ref.read(permissionGrantedProvider.notifier).state = true;
-  } else if (status.isDenied) {
+    messengerKey.currentState?.showSnackBar(
+      const SnackBar(content: Text('写真ライブラリへのアクセスが許可されました'))
+    );
+  }
+  if (status.isDenied) {
     ref.read(permissionGrantedProvider.notifier).state = false;
     messengerKey.currentState?.showSnackBar(
       const SnackBar(content: Text('写真ライブラリへのアクセスが拒否されました')),
     );
-  } else if (status.isPermanentlyDenied) {
+  } 
+  if (status.isPermanentlyDenied) {
     ref.read(permissionGrantedProvider.notifier).state = false;
     messengerKey.currentState?.showSnackBar(
       SnackBar(
