@@ -11,9 +11,14 @@ class DatabaseHelper {
 
   //データベースの初期化
   Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
+    try {
+      if (_database != null) return _database!;
+      _database = await _initDatabase();
+      return _database!;
+    } catch (e) {
+      // エラーを記録してクラッシュを防ぐ
+      throw Exception('Failed to initialize database');
+    }
   }
 
   //データベースの接続

@@ -14,11 +14,13 @@ class Calendar extends ConsumerWidget {
     final selectedDay = ref.watch(postDateProvider) ?? DateTime.now();
     final posts = ref.watch(postProvider);
     final permissionGranted = ref.watch(permissionGrantedProvider);
+    final GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>();
 
     return Scaffold(
+      key: messengerKey, // GlobalKeyを設定
       body: Column(
         children: [
-          //カレンダー
+          // カレンダー
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TableCalendar(
@@ -27,22 +29,31 @@ class Calendar extends ConsumerWidget {
               focusedDay: selectedDay,
               selectedDayPredicate: (day) => isSameDay(selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
-                ref.watch(postDateProvider.notifier).state = selectedDay;
-                ref.watch(postProvider.notifier).fetchPostsForDay(selectedDay);
+                ref.read(postDateProvider.notifier).state = selectedDay;
+
+                // アクセス許可がある場合のみ投稿を取得
+                if (permissionGranted) {
+                  ref.read(postProvider.notifier).fetchPostsForDay(selectedDay);
+                } 
+                // アクセス許可がない時の投稿処理
+                if(!permissionGranted) {
+                  messengerKey.currentState?.showSnackBar(
+                    const SnackBar(content: Text('フォルダアクセスの許可が必要です')),
+                  );
+                }
               },
               calendarFormat: CalendarFormat.month,
             ),
           ),
-          //投稿表示
+          // 投稿表示
           Expanded(
-            child: Consumer(
-              builder: (BuildContext context, WidgetRef ref, Widget? child) {
-
-                if(!permissionGranted){
-                  return Center(
-                    child: Text('まだ投稿はありません'),
-                  );
-                }
+            child: permissionGranted
+                ? posts.isEmpty
+                    ? const Center(child: Text('まだ投稿はありません'))
+                    : ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          final post = posts[index];
 
                 if (posts.isEmpty) {
                   return Center(
@@ -102,16 +113,14 @@ class Calendar extends ConsumerWidget {
                                   },
                                   icon: const Icon(Icons.delete),
                                 ),
-                              ],
+                              ]
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+                          );
+                        },
+                      )
+                : const Center(
+                    child: Text('フォルダアクセスの許可が必要です'),
+                  ),
           ),
         ],
       ),
