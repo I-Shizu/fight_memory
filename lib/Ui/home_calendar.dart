@@ -70,8 +70,34 @@ class Calendar extends ConsumerWidget {
                                 IconButton(
                                   onPressed: () async {
                                     final localId = post.localId;
-                                    if(localId != null){
-                                      ref.read(postProvider.notifier).deletePost(localId);
+                                    
+                                    if (localId != null) {
+                                      final bool? confirmDelete = await showDialog<bool>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('削除の確認'),
+                                            content: Text('この投稿を削除してもよろしいですか？'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(false); // キャンセル
+                                                },
+                                                child: Text('キャンセル'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(true); // 削除実行
+                                                },
+                                                child: Text('削除'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                      if (confirmDelete == true) {
+                                        ref.read(postProvider.notifier).deletePost(localId);
+                                      }
                                     }
                                   },
                                   icon: const Icon(Icons.delete),
