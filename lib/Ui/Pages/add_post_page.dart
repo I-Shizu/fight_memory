@@ -11,8 +11,7 @@ class AddPostPage extends ConsumerWidget {
   AddPostPage({super.key});
 
   final postTextProvider = StateProvider<String>((ref) => '');
-  final GlobalKey<ScaffoldMessengerState> messengerKey =
-      GlobalKey<ScaffoldMessengerState>(); // 追加
+  final GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>(); // 追加
 
   Future<void> _pickImage(WidgetRef ref) async {
     final picker = ImagePicker();
@@ -44,7 +43,6 @@ class AddPostPage extends ConsumerWidget {
                   if (!permissionGranted) {
                     await requestPermission(ref, messengerKey); // GlobalKeyを渡す
                   }
-
                   if (ref.read(permissionGrantedProvider)) {
                     await _pickImage(ref);
                   }

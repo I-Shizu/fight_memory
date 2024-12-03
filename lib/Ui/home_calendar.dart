@@ -14,8 +14,10 @@ class Calendar extends ConsumerWidget {
     final selectedDay = ref.watch(postDateProvider) ?? DateTime.now();
     final posts = ref.watch(postProvider);
     final permissionGranted = ref.watch(permissionGrantedProvider);
+    final GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>();
 
     return Scaffold(
+      key: messengerKey, // GlobalKeyを設定
       body: Column(
         children: [
           // カレンダー
@@ -27,14 +29,15 @@ class Calendar extends ConsumerWidget {
               focusedDay: selectedDay,
               selectedDayPredicate: (day) => isSameDay(selectedDay, day),
               onDaySelected: (selectedDay, focusedDay) {
-                ref.watch(postDateProvider.notifier).state = selectedDay;
+                ref.read(postDateProvider.notifier).state = selectedDay;
 
                 // アクセス許可がある場合のみ投稿を取得
                 if (permissionGranted) {
-                  ref.watch(postProvider.notifier).fetchPostsForDay(selectedDay);
-                } else {
-                  // アクセス許可がない場合の処理（例: ダイアログ表示）
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  ref.read(postProvider.notifier).fetchPostsForDay(selectedDay);
+                } 
+                // アクセス許可がない時の投稿処理
+                if(!permissionGranted) {
+                  messengerKey.currentState?.showSnackBar(
                     const SnackBar(content: Text('フォルダアクセスの許可が必要です')),
                   );
                 }
