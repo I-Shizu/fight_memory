@@ -3,7 +3,7 @@ import 'package:fight_app2/Ui/Pages/top_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+import '../../utils/permission_util.dart'; // 追加
 import '../../Provider/providers.dart';
 import '../ViewModels/post_view_model.dart';
 
@@ -11,23 +11,25 @@ class AddPostPage extends ConsumerWidget {
   AddPostPage({super.key});
 
   final postTextProvider = StateProvider<String>((ref) => '');
+  final GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>(); // 追加
 
   Future<void> _pickImage(WidgetRef ref) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    
+
     if (pickedFile != null) {
       ref.read(postImageFileProvider.notifier).state = File(pickedFile.path);
     }
   }
 
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
-
+  Widget build(BuildContext context, WidgetRef ref) {
     final postText = ref.watch(postTextProvider);
     final postImage = ref.watch(postImageFileProvider);
+    final permissionGranted = ref.watch(permissionGrantedProvider);
 
     return Scaffold(
+      key: messengerKey, // GlobalKeyを設定
       appBar: AppBar(title: const Text('新しい投稿')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -38,29 +40,12 @@ class AddPostPage extends ConsumerWidget {
               // 画像選択エリア
               GestureDetector(
                 onTap: () async {
-                  var permitStatus = await Permission.photos.request();
-
-                  if(permitStatus.isGranted) {
-                    ref.read(permissionGrantedProvider.notifier).state = true;
+                  if (!permissionGranted) {
+                    await requestPermission(ref, messengerKey); // GlobalKeyを渡す
+                  }
+                  if (ref.read(permissionGrantedProvider)) {
                     await _pickImage(ref);
                   }
-                  if(permitStatus.isDenied) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('写真ライブラリへのアクセスが拒否されました')),
-                    );
-                  }
-                  if(permitStatus.isPermanentlyDenied) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('設定から写真ライブラリへのアクセスを許可してください'),
-                        action: SnackBarAction(
-                          label: '設定を開く',
-                          onPressed: () => openAppSettings(),
-                        ),
-                      ),
-                    );
-                  }
-
                   FocusScope.of(context).unfocus();
                 },
                 child: Container(
@@ -76,7 +61,7 @@ class AddPostPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-          
+
               // テキスト入力フィールド
               Container(
                 width: double.infinity,
@@ -93,19 +78,19 @@ class AddPostPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 20),
-          
+
               // 保存ボタン
               ElevatedButton(
                 onPressed: () async {
                   if (postText.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    messengerKey.currentState?.showSnackBar(
                       const SnackBar(
                         content: Text('エラー：テキストを入力してください'),
                         duration: Duration(seconds: 2),
                       ),
                     );
                   } else if (postImage == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    messengerKey.currentState?.showSnackBar(
                       const SnackBar(
                         content: Text('エラー：画像を選択してください'),
                         duration: Duration(seconds: 2),
@@ -113,15 +98,15 @@ class AddPostPage extends ConsumerWidget {
                     );
                   } else {
                     // テキストと画像をPostRepositoryに渡して保存処理を実行
-                    await ref.read(postProvider.notifier).addPost(postText,postImage);
-                    //画像をnullに設定
+                    await ref.read(postProvider.notifier).addPost(postText, postImage);
+                    // 画像をnullに設定
                     ref.read(postImageFileProvider.notifier).state = null;
-                    //BottomNavigationBarをHomePageに設定
+                    // BottomNavigationBarをHomePageに設定
                     ref.read(currentIndexProvider.notifier).state = 0;
-                    //現在のページを閉じる
+                    // 現在のページを閉じる
                     Navigator.pushReplacement(
-                      context, 
-                      MaterialPageRoute(builder: (context) => TopPage())
+                      context,
+                      MaterialPageRoute(builder: (context) => TopPage()),
                     );
                   }
                 },
