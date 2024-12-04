@@ -52,8 +52,7 @@ class ListPage extends ConsumerWidget {
     );
   }
 
-  Widget _urlCard(BuildContext context,
-      {required IconData icon, required String title, required String url}) {
+  Widget _urlCard(BuildContext context,{required IconData icon, required String title, required String url}) {
     return Card(
       elevation: 4.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

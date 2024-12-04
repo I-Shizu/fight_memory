@@ -119,7 +119,7 @@ class AddPostPage extends ConsumerWidget {
                     // 画像をnullに設定
                     ref.read(postImageFileProvider.notifier).state = null;
                     // BottomNavigationBarをHomePageに設定
-                    ref.read(currentIndexProvider.notifier).state = 0;
+                    ref.read(currentPageIndexProvider.notifier).state = 0;
                     // 現在のページを閉じる
                     Navigator.pushReplacement(
                       context,
