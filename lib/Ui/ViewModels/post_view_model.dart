@@ -39,7 +39,7 @@ class PostViewModel extends StateNotifier<List<Post>> {
       imageFile: imageFile.path,
     );
 
-    final int localId = await repository.addPost(newPost);
+    await repository.addPost(newPost);
     fetchPosts(); 
   }
 
