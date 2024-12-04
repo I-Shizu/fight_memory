@@ -51,7 +51,6 @@ class PostRepository {
   // 特定の投稿を削除
   Future<void> deletePost(int localId) async {
     final db = await dbHelper.database;
-    print('Attempting to delete post with localId: $localId');
     await db.delete(
       'posts',
       where: 'localId = ?',

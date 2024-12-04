@@ -11,7 +11,6 @@ Future<void> initializeDatabase() async {
     // データベースパスを取得
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'app_database.db');
-    print('Database path: $path');
 
     // データベースを開くまたは作成
     await openDatabase(
@@ -25,7 +24,6 @@ Future<void> initializeDatabase() async {
       },
     );
   } catch (e) {
-    print('Error initializing database: $e');
     throw Exception('Database initialization failed');
   }
 }
