@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fight_app2/Data/Models/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -14,8 +15,8 @@ class AlbumPage extends ConsumerWidget {
     final posts = ref.watch(postProvider);
     final permissionGranted = ref.watch(permissionGrantedProvider);
 
+    //許可がない場合
     if (!permissionGranted) {
-      // 許可がない場合
       return Scaffold(
         appBar: AppBar(
           title: const Text('Album'),
@@ -30,8 +31,8 @@ class AlbumPage extends ConsumerWidget {
       );
     }
 
+    // 許可があるが投稿がない場合
     if (posts.isEmpty) {
-      // 許可があるが投稿がない場合
       return Scaffold(
         appBar: AppBar(
           title: const Text('Album'),
@@ -44,34 +45,37 @@ class AlbumPage extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Album'),
+        title: const Text('アルバム'),
       ),
       body: posts.isEmpty
           ? const Center(child: Text("まだ投稿はありません"))
           : ListView.builder(
               itemCount: posts.length,
-              itemBuilder: (context, index) {
-                final post = posts[index];
-                return Card(
-                  child: ListTile(
-                    subtitle: Column(
-                      children: [
-                        post.imageFile != null
-                            ? Image.file(File(post.imageFile!))
-                            : Container(),
-                        Text(
-                          post.text,
-                          style: const TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(DateFormat('yyyy-MM-dd').format(post.date)),
-                      ],
-                    ),
-                  ),
-                );
-              },
+              itemBuilder: (context, index) => postCard(posts[index]),
             ),
+    );
+  }
+  
+  postCard(Post post) {
+    return Card(
+      child: ListTile(
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (post.imageFile != null)
+              Image.file(File(post.imageFile!)),
+            Text(
+              post.text,
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              DateFormat('yyyy-MM-dd').format(post.date),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
