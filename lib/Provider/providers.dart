@@ -27,7 +27,7 @@ final localIdProvider = StateProvider<int?>((ref) {
 });
 
 //ページの場所を管理
-final currentIndexProvider = StateProvider<int>((ref) => 0);
+final currentPageIndexProvider = StateProvider<int>((ref) => 0);
 
 //選択した画像の表示を管理
 final postImageFileProvider = StateProvider<File?>((ref) {

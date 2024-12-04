@@ -14,19 +14,19 @@ class TopPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentIndex = ref.watch(currentIndexProvider);
+    final currentPageIndex = ref.watch(currentPageIndexProvider);
 
     return Scaffold(
-      body: _pageWidgets.elementAt(currentIndex),
+      body: _pageWidgets.elementAt(currentPageIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ほーむ'),
           BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'にゅー'),
           BottomNavigationBarItem(icon: Icon(Icons.photo_album), label: 'あるばむ'),
         ],
-        currentIndex: currentIndex,
+        currentIndex: currentPageIndex,
         fixedColor: Colors.blueAccent,
-        onTap: (index) => ref.read(currentIndexProvider.notifier).state = index,
+        onTap: (index) => ref.read(currentPageIndexProvider.notifier).state = index,
         type: BottomNavigationBarType.fixed,
       ),
     );
