@@ -6,22 +6,24 @@ import '../Data/Repository/post_repository.dart';
 
 //ビジネスロジックの状態管理をするProvider
 //Provider(定数)を管理する
+
+//レポジトリとのプロバイダの定義
 final postRepositoryProvider = Provider<PostRepository>((ref) {
   return PostRepository();
 });
 
-//投稿リストの管理
+//投稿リストプロバイダの管理
 final postListProvider = FutureProvider<List<Post>>((ref) async {
   final repository = ref.watch(postRepositoryProvider);
   return await repository.getAllPosts();
 });
 
-//投稿日時の管理
+//投稿日時プロバイダの管理
 final postDateProvider = StateProvider<DateTime?>((ref){ 
   return DateTime.now();
 });
 
-//
+//投稿のIDプロバイダを管理
 final localIdProvider = StateProvider<int?>((ref) {
   return null;
 });
@@ -47,14 +49,16 @@ final notificationProvider = StateNotifierProvider<NotificationNotifier, bool>((
   return NotificationNotifier();
 });
 
-// テーマ状態を管理する StateNotifier
+
+
+// テーマ状態を管理するStateNotifier
 class ThemeNotifier extends StateNotifier<bool> {
   ThemeNotifier() : super(false); // 初期値はライトテーマ(false)
 
   void toggleTheme() => state = !state;
 }
 
-// 通知状態を管理する StateNotifier
+// 通知状態を管理するStateNotifier
 class NotificationNotifier extends StateNotifier<bool> {
   NotificationNotifier() : super(true); // 初期値は通知オン(true)
 

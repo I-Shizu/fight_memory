@@ -27,7 +27,7 @@ class DatabaseHelper {
     final path = join(databasePath, _databaseName);
     return await openDatabase(
       path,
-      version: 2, // バージョンを2に変更
+      version: 1, 
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -36,7 +36,6 @@ class DatabaseHelper {
   Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) { // バージョン1 → 2でカラム名変更
       await db.execute('ALTER TABLE posts RENAME COLUMN imageUrl TO imageFile');
-      print('Upgraded database: Renamed column imageUrl to imageFile');
     }
   }
 

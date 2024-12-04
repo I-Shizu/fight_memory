@@ -28,7 +28,9 @@ class AddPostPage extends ConsumerWidget {
     final permissionGranted = ref.watch(permissionGrantedProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('新しい投稿')),
+      appBar: AppBar(
+        title: const Text('新規投稿')
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
@@ -60,7 +62,7 @@ class AddPostPage extends ConsumerWidget {
                       )
                     );
                   }
-                  if (ref.read(permissionGrantedProvider)) {
+                  if (permissionGranted) {
                     await _pickImage(ref);
                   }
                   FocusScope.of(context).unfocus();
@@ -83,6 +85,10 @@ class AddPostPage extends ConsumerWidget {
               Container(
                 width: double.infinity,
                 height: 230,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: TextField(
                   onChanged: (value) => ref.read(postTextProvider.notifier).state = value,
                   decoration: const InputDecoration(
@@ -106,20 +112,25 @@ class AddPostPage extends ConsumerWidget {
                         duration: Duration(seconds: 2),
                       ),
                     );
-                  } else if (postImage == null) {
+                  } 
+                  if (postImage == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('エラー：画像を選択してください'),
                         duration: Duration(seconds: 2),
                       ),
                     );
-                  } else {
+                  } 
+                  else {
                     // テキストと画像をPostRepositoryに渡して保存処理を実行
                     await ref.read(postProvider.notifier).addPost(postText, postImage);
+
                     // 画像をnullに設定
                     ref.read(postImageFileProvider.notifier).state = null;
+
                     // BottomNavigationBarをHomePageに設定
                     ref.read(currentPageIndexProvider.notifier).state = 0;
+                    
                     // 現在のページを閉じる
                     Navigator.pushReplacement(
                       context,
