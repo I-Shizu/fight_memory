@@ -27,7 +27,7 @@ class DatabaseHelper {
     final path = join(databasePath, _databaseName);
     return await openDatabase(
       path,
-      version: 2, // バージョンを2に変更
+      version: 1, 
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );

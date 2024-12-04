@@ -1,32 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-
+import 'Data/database_helper.dart';
 import 'Ui/Pages/top_page.dart';
-
-Future<void> initializeDatabase() async {
-  try {
-    // データベースパスを取得
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'app_database.db');
-
-    // データベースを開くまたは作成
-    await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        // 必要なテーブルを作成
-        await db.execute(
-          'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY, name TEXT)',
-        );
-      },
-    );
-  } catch (e) {
-    throw Exception('Database initialization failed');
-  }
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,7 +39,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: initializeDatabase(),
+      future: DatabaseHelper.instance.database,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // データベース初期化中
@@ -73,7 +50,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ),
             ),
           );
-        } else if (snapshot.hasError) {
+        }
+        if (snapshot.hasError) {
           // 初期化エラー時
           return MaterialApp(
             home: Scaffold(
@@ -82,7 +60,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               ),
             ),
           );
-        } else {
+        } 
+        else {
           // 初期化完了後にメイン画面を表示
           return MaterialApp(
             debugShowCheckedModeBanner: false,
