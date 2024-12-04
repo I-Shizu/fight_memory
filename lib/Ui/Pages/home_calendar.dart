@@ -65,7 +65,8 @@ class CalendarPage extends ConsumerWidget {
             ],
           ),
         );
-      } else if (status.isGranted) {
+      }
+      if (status.isGranted) {
         ref.read(permissionGrantedProvider.notifier).state = true;
       }
     }
@@ -111,13 +112,15 @@ class CalendarPage extends ConsumerWidget {
                   firstDay: DateTime.utc(2010, 1, 1),
                   lastDay: DateTime.utc(2030, 12, 31),
                   focusedDay: selectedDay,
+                  calendarFormat: CalendarFormat.month,
                   selectedDayPredicate: (day) => isSameDay(selectedDay, day),
                   onDaySelected: (selectedDay, focusedDay) {
                     ref.read(postDateProvider.notifier).state = selectedDay;
 
                     if (permissionGranted) {
                       ref.read(postProvider.notifier).fetchPostsForDay(selectedDay);
-                    } else {
+                    }
+                    if (!permissionGranted) {
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -133,14 +136,16 @@ class CalendarPage extends ConsumerWidget {
                       );
                     }
                   },
-                  calendarFormat: CalendarFormat.month,
                 ),
               ),
             ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
+              childCount: posts.length,
               (BuildContext context, int index) {
+                final post = posts[index];
+
                 if (!permissionGranted) {
                   return const Center(
                     child: Text('フォルダアクセスの許可が必要です'),
@@ -153,7 +158,6 @@ class CalendarPage extends ConsumerWidget {
                   );
                 }
 
-                final post = posts[index];
                 return Card(
                   child: ListTile(
                     subtitle: Column(
@@ -161,58 +165,52 @@ class CalendarPage extends ConsumerWidget {
                         if (post.imageFile != null)
                           Image.file(File(post.imageFile!))
                         else
-                          Container(),
-                        Row(
-                          children: [
-                            Text(
-                              '${post.date.year}/${post.date.month}/${post.date.day}',
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              onPressed: () async {
-                                final localId = post.localId;
-                                if (localId == null) {
-                                  return;
-                                }
+                          Row(
+                            children: [
+                              Text(
+                                '${post.date.year}/${post.date.month}/${post.date.day}',
+                              ),
+                              const Spacer(),
+                              IconButton(
+                                onPressed: () async {
+                                  final localId = post.localId;
+                                  final bool? confirmDelete = await showDialog<bool>(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('削除の確認'),
+                                        content: const Text('この投稿を削除してもよろしいですか？'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                            },
+                                            child: const Text('キャンセル'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(true);
+                                            },
+                                            child: const Text('削除'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
 
-                                final bool? confirmDelete = await showDialog<bool>(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('削除の確認'),
-                                      content: const Text('この投稿を削除してもよろしいですか？'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(false);
-                                          },
-                                          child: const Text('キャンセル'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true);
-                                          },
-                                          child: const Text('削除'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-
-                                if (confirmDelete == true) {
-                                  ref.read(postProvider.notifier).deletePost(localId);
-                                }
-                              },
-                              icon: const Icon(Icons.delete),
-                            ),
-                          ],
-                        ),
+                                  if (confirmDelete == true) {
+                                    ref.read(postProvider.notifier).deletePost(localId!);
+                                  }
+                                },
+                                icon: const Icon(Icons.delete),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
                 );
               },
-              childCount: posts.length,
             ),
           ),
         ],
