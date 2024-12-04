@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:table_calendar/table_calendar.dart';
+import '../../Provider/providers.dart';
+import 'list_page.dart';
+import '../ViewModels/post_view_model.dart';
 
-import '../Provider/providers.dart';
-import 'ViewModels/post_view_model.dart';
-
-class Calendar extends ConsumerWidget {
-  const Calendar({super.key});
+class CalendarPage extends ConsumerWidget {
+  const CalendarPage({super.key});
 
   Future<void> _checkAndRequestPermission(BuildContext context, WidgetRef ref) async {
     final permissionGranted = ref.read(permissionGrantedProvider);
@@ -83,6 +83,21 @@ class Calendar extends ConsumerWidget {
     });
 
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.list,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ListPage())
+              );
+            },
+          )
+        ],
+      ),
+      
       body: CustomScrollView(
         slivers: [
           SliverAppBar(

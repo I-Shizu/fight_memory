@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../Provider/providers.dart';
+import 'home_calendar.dart';
 import 'album_page.dart';
-import 'home_page.dart';
 import 'add_post_page.dart';
 
 class TopPage extends ConsumerWidget {
   final List<Widget> _pageWidgets = [
-    const HomePage(),
+    const CalendarPage(),
     AddPostPage(),
     const AlbumPage(),
   ];
