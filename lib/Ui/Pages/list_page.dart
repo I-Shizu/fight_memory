@@ -26,25 +26,37 @@ class ListPage extends ConsumerWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            Expanded(
-              child: ListView(
-                children: [
-                  _urlCard(
-                    context,
-                    icon: Icons.contact_mail,
-                    title: 'お問い合わせ',
-                    url: 'https://docs.google.com/forms/d/e/1FAIpQLSfC07B7amecHg9ADznRxjbET2gAqhf49W_LebXUP-F_jYVOug/viewform',
-                  ),
-                  _urlCard(
-                    context,
-                    icon: Icons.article,
-                    title: '利用規約',
-                    url: 'https://www.kiyac.app/privacypolicy/sBvSLzCgPJ3B7JeCjQOA',
-                  ),
-                  _toggleThemeCard(ref, isDarkTheme),
-                  _notificationSettingCard(ref, isNotificationEnabled),
-                ],
-              ),
+            ListView(
+              shrinkWrap: true, // リストビューの高さをコンテンツに合わせる
+              physics: NeverScrollableScrollPhysics(), // スクロールを無効化
+              children: [
+                _urlCard(
+                  context,
+                  icon: Icons.contact_mail,
+                  title: 'お問い合わせ',
+                  url: 'https://docs.google.com/forms/d/e/1FAIpQLSfC07B7amecHg9ADznRxjbET2gAqhf49W_LebXUP-F_jYVOug/viewform',
+                ),
+                _urlCard(
+                  context,
+                  icon: Icons.article,
+                  title: '利用規約',
+                  url: 'https://www.kiyac.app/privacypolicy/sBvSLzCgPJ3B7JeCjQOA',
+                ),
+              ],
+            ),
+            const SizedBox(height: 24), // 間隔を調整
+            const Text(
+              '基本設定',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            ListView(
+              shrinkWrap: true, // リストビューの高さをコンテンツに合わせる
+              physics: NeverScrollableScrollPhysics(), // スクロールを無効化
+              children: [
+                _toggleThemeCard(ref, isDarkTheme),
+                _notificationSettingCard(ref, isNotificationEnabled),
+              ],
             ),
           ],
         ),
