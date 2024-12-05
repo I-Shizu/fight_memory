@@ -45,12 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>写真ライブラリへのアクセスが必要です。</string>
-	<key>NSCameraUsageDescription</key>
-	<string>カメラへのアクセスが必要です。</string>
 	<key>NSDocumentsFolderUsageDescription</key>
 	<string>アプリのデータ保存に必要です。</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>画像を選択するためにフォトライブラリへのアクセスが必要です。</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>画像を保存するためにフォトライブラリへのアクセスが必要です。</string>
+	<key>NSCameraUsageDescription</key>
+	<string>カメラの使用が必要です。</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Access to pick a photo</string>
 	<key>NSAppTransportSecurity</key>
