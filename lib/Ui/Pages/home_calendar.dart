@@ -165,47 +165,48 @@ class CalendarPage extends ConsumerWidget {
                         if (post.imageFile != null)
                           Image.file(File(post.imageFile!))
                         else
-                          Row(
-                            children: [
-                              Text(
-                                '${post.date.year}/${post.date.month}/${post.date.day}',
-                              ),
-                              const Spacer(),
-                              IconButton(
-                                onPressed: () async {
-                                  final localId = post.localId;
-                                  final bool? confirmDelete = await showDialog<bool>(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('削除の確認'),
-                                        content: const Text('この投稿を削除してもよろしいですか？'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop(false);
-                                            },
-                                            child: const Text('キャンセル'),
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop(true);
-                                            },
-                                            child: const Text('削除'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                          Image.asset('assets/images.app_icon.JPG'),
+                        Row(
+                          children: [
+                            Text(
+                              '${post.date.year}/${post.date.month}/${post.date.day}',
+                            ),
+                            const Spacer(),
+                            IconButton(
+                              onPressed: () async {
+                                final localId = post.localId;
+                                final bool? confirmDelete = await showDialog<bool>(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: const Text('削除の確認'),
+                                      content: const Text('この投稿を削除してもよろしいですか？'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                          },
+                                          child: const Text('キャンセル'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                          child: const Text('削除'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
 
-                                  if (confirmDelete == true) {
-                                    ref.read(postProvider.notifier).deletePost(localId!);
-                                  }
-                                },
-                                icon: const Icon(Icons.delete),
-                              ),
-                            ],
-                          ),
+                                if (confirmDelete == true) {
+                                  ref.read(postProvider.notifier).deletePost(localId!);
+                                }
+                              },
+                              icon: const Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
