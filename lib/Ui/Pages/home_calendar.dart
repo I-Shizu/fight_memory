@@ -33,7 +33,7 @@ class CalendarPage extends ConsumerWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 400,
+            expandedHeight: 360,
             floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -60,7 +60,7 @@ class CalendarPage extends ConsumerWidget {
                 final post = posts[index];
 
                 if (posts.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text('まだ投稿はありません'),
                   );
                 }
