@@ -47,3 +47,5 @@ flutter:
     - family: PoetsenOne
       fonts:
         - asset: fonts/Poetsen_One/PoetsenOne-Regular.ttf
+  assets:
+    - assets/images/app_icon.JPG

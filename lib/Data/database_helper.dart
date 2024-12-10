@@ -49,5 +49,12 @@ class DatabaseHelper {
         imageFile TEXT
       )
     ''');
+
+    //サンプルデータ
+    await db.insert('posts', {
+      'text' : 'サンプル投稿',
+      'date' : DateTime.now().toIso8601String(),
+      'imageFile' : null,
+    });
   }
 }
