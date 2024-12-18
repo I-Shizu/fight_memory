@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:fight_app2/Data/Models/post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../Provider/providers.dart';
+
 import '../ViewModels/post_view_model.dart';
 
 class AlbumPage extends ConsumerWidget {
@@ -13,23 +12,6 @@ class AlbumPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final posts = ref.watch(postProvider);
-    final permissionGranted = ref.watch(permissionGrantedProvider);
-
-    //許可がない場合
-    if (!permissionGranted) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Album'),
-        ),
-        body: const Center(
-          child: Text(
-            "写真ライブラリの許可が必要です。\n設定から許可してください。",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-      );
-    }
 
     // 許可があるが投稿がない場合
     if (posts.isEmpty) {
@@ -51,31 +33,31 @@ class AlbumPage extends ConsumerWidget {
           ? const Center(child: Text("まだ投稿はありません"))
           : ListView.builder(
               itemCount: posts.length,
-              itemBuilder: (context, index) => postCard(posts[index]),
+              itemBuilder: (context, index) {
+                 Post post = posts[index];
+
+                return Card(
+                  child: ListTile(
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (post.imageFile != null)
+                          Image.file(File(post.imageFile!)),
+                        Text(
+                          post.text,
+                          style: const TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                        Text(
+                          DateFormat('yyyy-MM-dd').format(post.date),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
-    );
-  }
-  
-  postCard(Post post) {
-    return Card(
-      child: ListTile(
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (post.imageFile != null)
-              Image.file(File(post.imageFile!)),
-            Text(
-              post.text,
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            Text(
-              DateFormat('yyyy-MM-dd').format(post.date),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
