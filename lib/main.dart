@@ -22,19 +22,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    // Observerを登録
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    // Observerを解除
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +38,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             ),
           );
         }
-        if (snapshot.hasError) {
+        else if (snapshot.hasError) {
           // 初期化エラー時
           return MaterialApp(
             home: Scaffold(
