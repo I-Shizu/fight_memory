@@ -4,7 +4,7 @@ import '../Models/post_model.dart';
 import '../database_helper.dart';
 
 class PostRepository {
-  final dbHelper = DatabaseHelper.instance;
+  DatabaseHelper dbHelper = DatabaseHelper();
 
   // 全投稿を取得
   Future<List<Post>> getAllPosts() async {
