@@ -24,7 +24,21 @@ class DatabaseHelper {
     );
   }
 
-  //データベースを取得
+  //データベースの挿入(Create)
+  Future<void> insertPost() async {
+    final db = await database;
+    final int localId = await db.insert(
+      'posts',
+      {
+        'text': 'テスト投稿',
+        'date': DateTime.now().toIso8601String(),
+        'imageFile': 'test.jpg',
+      },
+    );
+    print('inserted: $localId');
+  }
+
+  //データベースを取得(Read)
   Future<Database> get database async {
     if (_database != null) {
       return _database!;
@@ -42,6 +56,22 @@ class DatabaseHelper {
       );
     });
     return _database!;
+  }
+
+  //データベースを更新(Update)
+  Future<void> updatePost() async {
+    final db = await database;
+    int count = await db.rawUpdate(
+    'UPDATE Test SET name = ?, value = ? WHERE name = ?',
+    ['updated name', '9876', 'some name']);
+    print('updated: $count');
+  }
+
+  //特定のデータを削除(Delete)
+  Future<void> deletePost() async {
+    final db = await database;
+    int count = await db.rawDelete('DELETE FROM Test WHERE name = ?', ['another name']);
+    print('deleted: $count');
   }
 
   //データベースを閉じる

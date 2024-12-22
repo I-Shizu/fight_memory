@@ -3,7 +3,7 @@ import 'package:fight_app2/Ui/Pages/top_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
+//import 'package:permission_handler/permission_handler.dart';
 import '../../Provider/providers.dart';
 import '../ViewModels/post_view_model.dart';
 
@@ -25,7 +25,7 @@ class AddPostPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final postText = ref.watch(postTextProvider);
     final postImage = ref.watch(postImageFileProvider);
-    final permissionGranted = ref.watch(permissionGrantedProvider);
+    //final permissionGranted = ref.watch(permissionGrantedProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +40,7 @@ class AddPostPage extends ConsumerWidget {
               // 画像選択エリア
               GestureDetector(
                 onTap: () async {
-                  if (!permissionGranted) {
+                  /*if (!permissionGranted) {
                     showDialog(
                       context: context, 
                       builder: (context) => AlertDialog(
@@ -64,7 +64,8 @@ class AddPostPage extends ConsumerWidget {
                   }
                   if (permissionGranted) {
                     await _pickImage(ref);
-                  }
+                  }*/
+                  await _pickImage(ref);
                   FocusScope.of(context).unfocus();
                 },
                 child: Container(
