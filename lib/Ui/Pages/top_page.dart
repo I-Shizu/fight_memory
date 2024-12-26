@@ -7,9 +7,9 @@ import 'add_post_page.dart';
 
 class TopPage extends ConsumerWidget {
   final List<Widget> _pageWidgets = [
-    const CalendarPage(),
+    CalendarPage(),
     AddPostPage(),
-    const AlbumPage(),
+    AlbumPage(),
   ];
 
   @override
