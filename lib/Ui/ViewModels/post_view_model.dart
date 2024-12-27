@@ -1,6 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../Data/Models/post_model.dart';
 import '../../Data/Repository/post_repository.dart';
 import '../../Provider/providers.dart';
@@ -44,8 +44,8 @@ class PostViewModel extends StateNotifier<List<Post>> {
   }
 
   // 投稿を更新
-  Future<void> updatePost(int localId,Post updatedData) async {
-    await repository.updatePost(localId, updatedData);
+  Future<void> updatePost(int localId,String text,String imageFile) async {
+    await repository.updatePost(localId, text, imageFile);
     fetchPosts(); 
   }
 

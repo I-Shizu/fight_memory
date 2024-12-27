@@ -1,51 +1,61 @@
+import 'dart:async';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DatabaseHelper {
-  Database? _database;
+class DatabaseHelper extends AsyncNotifier<List<Map>>{
+  late String path;
+  late Database database;
+  List<Map> listMap = [];
   
-  //アプリにデータベースを作成
-  Future<Database> open(String path, {required int version, required Future<Null> Function(dynamic db, dynamic version) onCreate}) async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'posts.db');
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute(
-          'CREATE TABLE posts('
-          'localId INTEGER PRIMARY KEY AUTOINCREMENT,'
-          'text TEXT,'
-          'date TEXT,'
-          'imageFile TEXT'
-          ')',
-        );
-      },
-    );
+  @override
+  Future<List<Map>> build() async {
+    // getDatabasesPath()：デフォルトのデータベース保存用フォルダのパスを取得
+    var databasesPath = await getDatabasesPath();
+    // 取得したパスから本アプリ用にて生成するDB名を指定
+    path = '$databasesPath/posts.db';
+    // データベースを開く（pathに存在しなければ新規作成）
+    database = await openDatabase(
+        path,
+        version: 1,
+        // DBがpathに存在しなかった場合にonCreateが呼び出される
+        onCreate: (Database db, int version) async {
+          await db.execute(
+            'CREATE TABLE posts('
+            'localId INTEGER PRIMARY KEY AUTOINCREMENT,'
+            'text TEXT,'
+            'date TEXT,'
+            'imageFile TEXT'
+            ')',
+          );
+        });
+    return [];
   }
 
-  //データベースの挿入(Create)
-  Future<void> insertPost() async {
-    final db = await database;
-    final int localId = await db.insert(
+  //データベースに新しいデータを挿入(Create)
+  //テキストと画像をどこで管理するか？
+  Future<void> insertDb(String text,String imageFile) async {
+    final db = await readDb;
+    await db.insert(
       'posts',
       {
-        'text': 'テスト投稿',
+        'text': text,
         'date': DateTime.now().toIso8601String(),
-        'imageFile': 'test.jpg',
+        'imageFile': imageFile,
       },
     );
-    print('inserted: $localId');
+    // SELECT
+    listMap = await database.rawQuery('SELECT * FROM Test');
+    // 状態更新
+    
   }
 
-  //データベースを取得(Read)
-  Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
+  //データベースを取得する処理(Read)
+  Future<Database> get readDb async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'posts.db');
-    _database = await openDatabase(path, version: 1, onCreate: (db, version) async {
+    database = await openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute(
         'CREATE TABLE posts('
         'localId INTEGER PRIMARY KEY AUTOINCREMENT,'
@@ -55,28 +65,37 @@ class DatabaseHelper {
         ')',
       );
     });
-    return _database!;
+    return database;
   }
 
-  //データベースを更新(Update)
-  Future<void> updatePost() async {
-    final db = await database;
-    int count = await db.rawUpdate(
-    'UPDATE Test SET name = ?, value = ? WHERE name = ?',
-    ['updated name', '9876', 'some name']);
-    print('updated: $count');
+  //データベースを編集した時の更新処理(Update)
+  Future<void> updateDb(int localId,String text,String imageFile) async {
+    final db = await readDb;
+    await db.update(
+      'posts',
+      {
+        'text': text,
+        'image': imageFile,
+      },
+      where: 'localId = ?',
+      whereArgs: [localId],
+    );
   }
 
   //特定のデータを削除(Delete)
-  Future<void> deletePost() async {
-    final db = await database;
-    int count = await db.rawDelete('DELETE FROM Test WHERE name = ?', ['another name']);
-    print('deleted: $count');
+  Future<void> deleteDb(int localId) async {
+    final db = await readDb;
+    await db.delete(
+      'posts',
+      where: 'localId = ?',
+      whereArgs: [localId],
+    );
+    //状態更新
   }
 
   //データベースを閉じる
   Future<void> closeDb() async {
-    final db = await database;
+    final db = await readDb;
     db.close();
   }
 }

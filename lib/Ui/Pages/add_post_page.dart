@@ -10,8 +10,6 @@ import '../ViewModels/post_view_model.dart';
 class AddPostPage extends ConsumerWidget {
   AddPostPage({super.key});
 
-  final postTextProvider = StateProvider<String>((ref) => '');
-
   Future<void> _pickImage(WidgetRef ref) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);

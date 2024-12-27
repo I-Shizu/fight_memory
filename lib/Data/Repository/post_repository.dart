@@ -8,13 +8,14 @@ class PostRepository {
 
   // 全投稿を取得
   Future<List<Post>> getAllPosts() async {
-    final db = await dbHelper.database;
+    final db = await dbHelper.readDb;
     final result = await db.query('posts', orderBy: 'date DESC');
     return result.map((data) => SQLiteMapper.fromSQLite(data)).toList();
   }
 
+  //日にちごとに投稿を取得
   Future<List<Post>> getPostsForDay(DateTime selectedDay) async {
-    final db = await dbHelper.database;
+    final db = await dbHelper.readDb;
     // 選択された日付の0時と23時59分59秒を取得して、その日の投稿を取得
     final startOfDay = DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
     final endOfDay = DateTime(selectedDay.year, selectedDay.month, selectedDay.day, 23, 59, 59);
@@ -32,29 +33,18 @@ class PostRepository {
 
   // 新規投稿を追加
   Future<int> addPost(Post newPost) async {
-    final db = await dbHelper.database;
+    final db = await dbHelper.readDb;
     final int localId = await db.insert('posts', SQLiteMapper.toSQLite(newPost));
     return localId;
   }
 
-  // 投稿を更新
-  Future<void> updatePost(int localId,Post updatedData) async {
-    final db = await dbHelper.database;
-    await db.update(
-      'posts',
-      SQLiteMapper.toSQLite(updatedData),
-      where: 'localId = ?',
-      whereArgs: [localId],
-    );
+  // 投稿を更新?
+  Future<void> updatePost(int localId,String text,String imageFile) async {
+    await dbHelper.updateDb(localId, text, imageFile);
   }
 
   // 特定の投稿を削除
   Future<void> deletePost(int localId) async {
-    final db = await dbHelper.database;
-    await db.delete(
-      'posts',
-      where: 'localId = ?',
-      whereArgs: [localId],
-    );
+    await dbHelper.deleteDb(localId);
   }
 }

@@ -31,10 +31,13 @@ final localIdProvider = StateProvider<int?>((ref) {
 //ページの場所を管理
 final currentPageIndexProvider = StateProvider<int>((ref) => 0);
 
-//選択した画像の表示を管理
+//画像のプロバイダ
 final postImageFileProvider = StateProvider<File?>((ref) {
   return null;
 });
+
+//テキストのプロバイダ
+final postTextProvider = StateProvider<String>((ref) => '');
 
 //写真フォルダへのアクセス許可を管理
 final permissionGrantedProvider = StateProvider<bool>((ref) => false);
@@ -43,7 +46,6 @@ final permissionGrantedProvider = StateProvider<bool>((ref) => false);
 final themeProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {
   return ThemeNotifier();
 });
-
 // テーマ状態を管理するStateNotifier
 class ThemeNotifier extends StateNotifier<bool> {
   ThemeNotifier() : super(false); // 初期値はライトテーマ(false)
@@ -55,7 +57,6 @@ class ThemeNotifier extends StateNotifier<bool> {
 final notificationProvider = StateNotifierProvider<NotificationNotifier, bool>((ref) {
   return NotificationNotifier();
 });
-
 // 通知状態を管理するStateNotifier
 class NotificationNotifier extends StateNotifier<bool> {
   NotificationNotifier() : super(true); // 初期値は通知オン(true)
