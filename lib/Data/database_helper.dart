@@ -11,7 +11,6 @@ class DatabaseHelper extends AsyncNotifier<List<Map>>{
   
   @override
   Future<List<Map>> build() async {
-    // getDatabasesPath()：デフォルトのデータベース保存用フォルダのパスを取得
     var databasesPath = await getDatabasesPath();
     // 取得したパスから本アプリ用にて生成するDB名を指定
     path = '$databasesPath/posts.db';
