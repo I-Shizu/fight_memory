@@ -1,21 +1,26 @@
 import 'dart:io';
 
+import 'package:fight_app2/post_list.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../Data/Models/post_model.dart';
 import '../Data/Repository/post_repository.dart';
+import '../Data/database_helper.dart';
 
 //ビジネスロジックの状態管理をするProvider
 //Provider(定数)を管理する
+
+//データベースのプロバイダ
+final databaseHelperProvider = AsyncNotifierProvider<DatabaseHelper,List<Map>>((){
+    return DatabaseHelper();
+  });
 
 //レポジトリとのプロバイダの定義
 final postRepositoryProvider = Provider<PostRepository>((ref) {
   return PostRepository();
 });
 
-//投稿リストプロバイダの管理
-final postListProvider = FutureProvider<List<Post>>((ref) async {
-  final repository = ref.watch(postRepositoryProvider);
-  return await repository.getAllPosts();
+//投稿リストプロバイダ？
+final postListProvider = NotifierProvider<PostList, List<Map>>(() {
+  return PostList();
 });
 
 //投稿日時プロバイダの管理
