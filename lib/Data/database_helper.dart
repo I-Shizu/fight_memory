@@ -97,4 +97,9 @@ class DatabaseHelper extends AsyncNotifier<List<Map>>{
     final db = await readDb;
     db.close();
   }
+
+  //データベースのプロバイダ
+final databaseHelperProvider = AsyncNotifierProvider<DatabaseHelper,List<Map>>((){
+    return DatabaseHelper();
+  });
 }
