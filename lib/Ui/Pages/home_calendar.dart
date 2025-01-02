@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../Provider/providers.dart';
-import '../ViewModels/post_view_model.dart';
 import 'list_page.dart';
 
 class CalendarPage extends ConsumerWidget {
@@ -13,7 +12,7 @@ class CalendarPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDay = ref.watch(postDateProvider) ?? DateTime.now();
-    final posts = ref.watch(postProvider);
+    final posts = ref.watch(postListProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +46,7 @@ class CalendarPage extends ConsumerWidget {
                   selectedDayPredicate: (day) => isSameDay(selectedDay, day),
                   onDaySelected: (selectedDay, focusedDay) {
                     ref.read(postDateProvider.notifier).state = selectedDay;
-                    ref.read(postProvider.notifier).fetchPostsForDay(selectedDay);
+                    ref.read(postListProvider.notifier).fetchPostsForDay(selectedDay);
                   },
                 ),
               ),
@@ -106,7 +105,7 @@ class CalendarPage extends ConsumerWidget {
                                 );
 
                                 if (confirmDelete == true) {
-                                  ref.read(postProvider.notifier).deletePost(localId!);
+                                  ref.read(postListProvider.notifier).deletePost(localId!);
                                 }
                               },
                               icon: const Icon(Icons.delete),
