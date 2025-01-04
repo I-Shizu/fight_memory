@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../ViewModels/post_view_model.dart';
+import '../../post_list.dart';
 
 class AlbumPage extends ConsumerWidget {
   const AlbumPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final posts = ref.watch(postProvider);
+    final posts = ref.watch(postListProvider);
 
     // 許可があるが投稿がない場合
     if (posts.isEmpty) {
